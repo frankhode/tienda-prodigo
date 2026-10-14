@@ -25,6 +25,7 @@ if (thumbs.length && dialog) {
     });
   };
   thumbs.forEach((thumb, i) => thumb.addEventListener('click', () => select(i)));
+  document.querySelectorAll('[data-open-gallery]').forEach(button => button.addEventListener('click', () => { select(index); dialog.showModal(); }));
   document.getElementById('open-zoom').addEventListener('click', () => { select(index); dialog.showModal(); });
   document.getElementById('close-zoom').addEventListener('click', () => dialog.close());
   document.getElementById('prev-photo').addEventListener('click', () => select(index - 1));

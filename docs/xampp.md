@@ -32,6 +32,19 @@ Precios y contacto siguen opcionales. Para habilitar consultas, agregar a `confi
 
 La V1 no necesita migraciones SQL. Sigue siendo una instalación local: estos archivos no publican la web en internet.
 
+## Plantillas por pieza
+
+Después de actualizar el código, abrir una ficha en el panel y buscar **Plantilla de visualización**. Guardar primero los cambios de la ficha y pulsar **Habilitar plantillas** una sola vez: agrega `piece_presentations` sin modificar las tablas existentes. También es posible importar `database/004_presentations.sql` desde phpMyAdmin. Si todavía no se habilitaron, las fichas funcionan con paneles por defecto.
+
+- **Paneles:** información a la izquierda e imagen a la derecha en computadora; imagen arriba en celular.
+- **Wallpaper:** la portada ocupa el fondo y el título y un texto breve flotan encima; la ficha completa y la galería se mantienen debajo. Sin portada, se usa paneles.
+- Elegir familia tipográfica para título/texto, tamaños y cursiva. Las fuentes son familias del sistema (Georgia, Palatino, Arial y Courier), sin dependencias de servicios externos; todavía no se suben archivos de fuentes propios.
+- En wallpaper, elegir posición izquierda/centro/derecha, velo oscuro/claro, intensidad y punto de encuadre horizontal/vertical. El fondo se recorta para cubrir el área; la imagen completa sigue disponible en el visor.
+- Escribir, si se desea, un texto breve (hasta 600 caracteres) para la portada. El texto descriptivo largo no se superpone al fondo.
+- Guardar y usar **Previsualizar** para ver los ajustes, incluso en borradores. **Probar paneles** / **Probar wallpaper** comparan ambos con los datos guardados sin cambiar la elección. Estas vistas y las imágenes de borradores exigen sesión administrativa; compartir su URL no publica una ficha.
+
+En móvil el fondo tiene un velo más intenso para facilitar la lectura. Los ajustes son independientes por pieza y no cambian el diseño de las tarjetas del catálogo.
+
 ## Cargar 20 piezas de ejemplo
 
 Actualizar el código y entrar al panel. En el menú **Ejemplos**, pulsar **Cargar los 20 ejemplos**. Se generan dos fichas por categoría, cada una con dos ilustraciones esquemáticas (vista general y detalle), campos específicos y datos ficticios. Los códigos empiezan con `DEMO-` y los títulos con `[DEMO]`.

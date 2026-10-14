@@ -25,6 +25,11 @@ try {
         }
         if ($page==='edit') {
             $id=id_param();
+            if(isset($_POST['enable_templates'])) {
+                db()->exec(file_get_contents(__DIR__.'/database/004_presentations.sql'));
+                flash('Plantillas habilitadas. Ya podés elegir la presentación de cada pieza.');
+                redirect('edit',['id'=>$id]);
+            }
             if (isset($_POST['delete_image'])) {
                 delete_image($id,(int)$_POST['delete_image']); flash('Foto eliminada.'); redirect('edit',['id'=>$id]);
             }
@@ -44,13 +49,14 @@ try {
         header('Content-Type: image/jpeg'); header('Content-Length: '.filesize($file)); session_write_close(); readfile($file); exit;
     }
 } catch (Throwable $e) { $error=report_error($e); }
+if($user&&$page==='preview'&&$error==='') { try { $p=get_piece(id_param()); header('Location: catalogo.php?'.http_build_query(['pieza'=>$p['slug'],'preview'=>1])); exit; } catch(Throwable $e) { $error=report_error($e); } }
 header_view('Panel',$user);
 try {
     if (!$user && in_array($page,['login','setup'],true)) login_view($setup,$error);
     elseif (!$user) { ?><section class="card"><h1>Conectemos la base de datos</h1><div class="notice error"><?=h($error)?></div><p>Iniciá MySQL en XAMPP, verificá que exista la base prodigo e importá el esquema y las categorías. Si cambiaste los datos de conexión, copiá config/example.php como config/local.php y editá esa copia.</p><a class="button" href="index.php">Volver a comprobar</a></section><?php }
     elseif ($page==='demo') demo_view($error);
     elseif ($page==='edit') edit_view(id_param(),$error);
-    elseif ($page==='preview') preview_view(id_param());
+    elseif ($page==='preview') { ?><div class="notice error"><?=h($error)?></div><?php }
     else list_view($error);
 } catch (Throwable $e) { ?><div class="notice error" role="alert"><?=h(report_error($e))?></div><a class="button" href="<?=h(url('list'))?>">Volver al listado</a><?php }
 footer_view();

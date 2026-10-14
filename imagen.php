@@ -8,7 +8,10 @@ try {
     $variant=$_GET['variant']??'web';
     if(!$id||!is_string($variant)||!in_array($variant,['thumbnail','web','zoom'],true)) { http_response_code(404); exit; }
     // Se valida la publicación de la pieza incluso con sesión administrativa abierta.
-    $row=query('SELECT v.storage_key FROM image_variants v JOIN images i ON i.id=v.image_id JOIN public_pieces p ON p.id=i.piece_id WHERE i.id=? AND v.variant=? AND v.storage_backend=?',[$id,$variant,'local'])->fetch();
+    $preview=isset($_GET['preview']) && $_GET['preview']==='1';
+    if($preview&&!admin()) { http_response_code(404); exit; }
+    $source=$preview?'pieces':'public_pieces';
+    $row=query('SELECT v.storage_key FROM image_variants v JOIN images i ON i.id=v.image_id JOIN '.$source.' p ON p.id=i.piece_id WHERE i.id=? AND v.variant=? AND v.storage_backend=?'.($preview?' AND p.deleted_at IS NULL':''),[$id,$variant,'local'])->fetch();
     if(!$row) { http_response_code(404); exit; }
     $path=image_key($row['storage_key']);
     if(!is_file($path)) { http_response_code(404); exit; }

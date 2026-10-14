@@ -157,6 +157,60 @@ assert 'pieza=' in public(vista='azar').url
 private = public('index.php', page='list')
 assert 'Ingresá a Pródigo' in private.text
 
+# Activación no destructiva y plantillas por pieza; vista previa de borradores privada.
+editor = get('edit')
+r = post('edit', {'csrf': token(editor.text), 'enable_templates': '1'})
+assert 'Plantillas habilitadas' in r.text
+assert 'display_template' in r.text
+sample_chunk = next(chunk for chunk in chunks if 'DEMO-03-01' in chunk)
+sample_piece_id = int(re.search(r'page=edit[^"\s]*?id=(\d+)', sample_chunk).group(1))
+editor = get('edit', id=sample_piece_id)
+settings = {'display_template': 'wallpaper', 'display_title_font': 'mono',
+            'display_body_font': 'classic', 'display_title_size': 'large',
+            'display_body_size': 'large', 'display_title_style': 'italic',
+            'display_text_position': 'right', 'display_tone': 'light',
+            'display_veil': '80', 'display_focal_x': '80', 'display_focal_y': '20',
+            'display_lead': 'Una radio para mirar de cerca. <script>no</script>'}
+r = post('edit&id='+str(sample_piece_id), {**common, **settings,
+         'csrf': token(editor.text), 'version': token(editor.text, 'version'),
+         'publication_status': 'published', 'title': 'Radio de demostración'})
+assert 'Ficha guardada' in r.text, re.findall(r'<div class="notice error"[^>]*>(.*?)</div>', r.text, re.S)
+wallpaper = public(pieza='demo-03-01')
+assert wallpaper.status_code == 200 and 'wallpaper-hero' in wallpaper.text
+for expected in ['title-font-mono', 'body-font-classic', 'text-right', 'tone-light', 'veil-80', 'focus-x-80', 'focus-y-20']:
+    assert expected in wallpaper.text
+assert '<script>no</script>' not in wallpaper.text and '&lt;script&gt;no&lt;/script&gt;' in wallpaper.text
+assert 'La pieza en detalle' in wallpaper.text
+assert wallpaper.text.count('id="zoom-dialog"') == 1
+assert wallpaper.text.count('<h1>') == 1
+saved_version = token(r.text, 'version')
+r = post('edit&id='+str(sample_piece_id), {**common, **settings,
+         'csrf': token(r.text), 'version': saved_version, 'display_title_font': 'bad; color:red',
+         'publication_status': 'published'})
+assert 'Opción de display_title_font incorrecta' in r.text
+assert 'title-font-mono' in public(pieza='demo-03-01').text
+# El borrador se puede previsualizar con imágenes sin habilitar acceso anónimo.
+draft_piece_id = int(re.search(r'page=edit[^"\s]*?id=(\d+)', draft).group(1))
+private_preview = get('preview', id=draft_piece_id)
+assert 'Previsualización privada' in private_preview.text and 'Borrador' in private_preview.text
+assert 'preview=1' in private_preview.url
+assert s.get(base+'imagen.php', params={'id':draft_image_id,'preview':'1'},timeout=30).status_code == 200
+assert public(pieza='demo-05-02', preview='1').status_code == 404
+assert public('imagen.php', id=draft_image_id, preview='1').status_code == 404
+# Paneles conservan ajustes tipográficos; ordenar texto antes de la galería en escritorio.
+editor = get('edit', id=sample_piece_id)
+r = post('edit&id='+str(sample_piece_id), {**common, **settings, 'display_template':'panels',
+         'csrf':token(editor.text),'version':token(editor.text,'version'),
+         'publication_status':'published','title':'Radio de demostración'})
+assert 'Ficha guardada' in r.text
+panels = public(pieza='demo-03-01').text
+assert 'template-panels' in panels and 'wallpaper-hero' not in panels
+assert panels.index('<article class="item-info">') < panels.index('<div class="item-gallery">')
+trial = s.get(base+'catalogo.php', params={'pieza':'demo-03-01','preview':'1','plantilla':'wallpaper'},timeout=30)
+assert 'wallpaper-hero' in trial.text
+assert 'template-panels' in public(pieza='demo-03-01').text
+assert 'wallpaper-hero' not in public(pieza='demo-03-01',plantilla='wallpaper').text
+
 r = post('demo', {'csrf': token(r.text), 'action': 'trash'})
 assert '20 ejemplos enviados a papelera' in r.text
 assert public(vista='catalogo').text.count('class="object-card"') == 0
@@ -177,4 +231,4 @@ r = post('logout', {'csrf': token(get('edit', id=piece_id).text)})
 assert 'Ingresá a Pródigo' in r.text
 r = post('login', {'csrf': token(r.text), 'email': 'test@example.invalid', 'password': password})
 assert 'Piezas' in r.text and 'Ingresá a Pródigo' not in r.text
-print('OK: instalación única, CSRF, fichas, campos, privacidad, publicación, JPEG, sesión, concurrencia, papelera, validación, login, ejemplos y catálogo público con privacidad de fichas e imágenes.')
+print('OK: instalación única, CSRF, fichas, campos, privacidad, publicación, JPEG, sesión, concurrencia, papelera, validación, login, ejemplos y catálogo, plantillas y vistas previas con privacidad de fichas e imágenes.')

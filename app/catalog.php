@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+require_once __DIR__.'/presentation.php';
 const PUBLICATION = ['draft'=>'Borrador','published'=>'Publicado','archived'=>'Archivado'];
 const AVAILABILITY = ['available'=>'Disponible','reserved'=>'Reservado','sold'=>'Vendido','not_for_sale'=>'Fuera de venta'];
 const IMAGE_ROLES = ['presentation'=>'Presentación','descriptive'=>'Descriptiva','detail'=>'Detalle'];
@@ -13,7 +14,7 @@ function piece_images(int $id): array {
 }
 function piece_version(int $id): string {
     return hash('sha256', json_encode([
-        get_piece($id), piece_images($id),
+        get_piece($id), piece_images($id), presentation_get($id),
         query('SELECT category_id FROM piece_categories WHERE piece_id=? ORDER BY category_id',[$id])->fetchAll(),
         query('SELECT * FROM piece_field_values WHERE piece_id=? ORDER BY category_id,field_key',[$id])->fetchAll(),
     ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
@@ -105,6 +106,7 @@ function save_piece(int $id): int {
         }
         $values[]=[$def['category_id'],$def['field_key'],$v];
     }
+    $presentation=presentation_ready()?presentation_input():null;
     $batch=prepare_uploads();
     try {
         db()->beginTransaction();
@@ -161,6 +163,7 @@ function save_piece(int $id): int {
             if (!$cover || !query("SELECT image_id FROM image_variants WHERE image_id=? AND variant='web'",[$cover])->fetch()) throw new InvalidArgumentException('Para publicar, subí al menos una foto y elegí portada.');
             query('UPDATE pieces SET published_at=COALESCE(published_at,CURRENT_TIMESTAMP) WHERE id=?',[$id]);
         }
+        if($presentation!==null) presentation_save($id,$presentation);
         db()->commit(); return $id;
     } catch (Throwable $e) { if (db()->inTransaction()) db()->rollBack(); remove_generated($batch); throw $e; }
 }
