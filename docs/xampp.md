@@ -1,0 +1,55 @@
+# Primera instalación en XAMPP
+
+La base `prodigo` ya creada sirve para este panel. **No vuelvas a importar el esquema ni las categorías si ya lo hiciste.** No se necesitan tablas nuevas para esta versión.
+
+1. Descargar el ZIP del repositorio (Code → Download ZIP) y descomprimir.
+2. Copiar su contenido a `C:\xampp\htdocs\tienda-prodigo` (o la carpeta htdocs de tu XAMPP). `index.php` debe quedar directamente dentro de esa carpeta.
+3. Iniciar Apache y MySQL desde XAMPP.
+4. Abrir `http://localhost/tienda-prodigo/`.
+5. Crear la cuenta inicial con correo y contraseña de al menos 12 caracteres.
+
+El panel se conecta a `127.0.0.1:3306`, base `prodigo`, usuario `root`, contraseña vacía: valores habituales de XAMPP local. Si tu instalación es diferente, copiar `config/example.php` como `config/local.php` y modificar esa copia. No subir `local.php` a GitHub.
+
+## Primera pieza
+
+En «Nueva pieza», escribir un título, elegir categoría y subir fotos. Guardar como borrador. Los campos de la categoría aparecen al seleccionarla. La primera foto se usa de portada; después se puede elegir otra, editar textos y ordenar arrastrando, con las flechas o por número.
+
+El panel permite título provisional «Sin título» y datos incompletos. Para publicar necesita una categoría y una portada procesada. «Publicado» todavía significa estado guardado: **esta versión no tiene tienda pública**. La previsualización abre una ficha privada con lo que efectivamente se guardó.
+
+Disponibilidad inicial: «Fuera de venta». Cambiar a «Disponible» cuando corresponda. Los estados «Reservado» y «Vendido» pueden registrarse manualmente en esta etapa; el registro de operaciones comerciales se implementará después.
+
+La papelera conserva la ficha y fotos y permite restaurarla. No es necesario editar directamente las tablas para gestionar piezas.
+
+## Fotografías
+
+- JPG, PNG y WebP; no TIFF ni SVG.
+- Hasta 12 archivos por carga, 15 MB y 12 megapíxeles por foto.
+- Se generan miniatura (hasta 420 px), web (hasta 1600 px) y zoom (hasta 2400 px), sin ampliar una imagen pequeña.
+- Las copias son JPEG, sin metadatos EXIF, con fondo blanco para transparencias. Si EXIF está disponible, se corrige la orientación del JPEG.
+- **Los originales no se almacenan:** conservarlos aparte. Respaldar `storage/images` junto con la base de datos.
+- Elegir «Eliminar foto» descarta los cambios no guardados de la ficha; confirmar después de guardar lo que se quiera conservar. Para quitar una portada de una ficha publicada, guardar otra portada o pasarla a borrador primero.
+
+Si falla una carga por tamaño, revisar `C:\xampp\php\php.ini`:
+
+```ini
+upload_max_filesize=15M
+post_max_size=200M
+max_file_uploads=20
+memory_limit=256M
+```
+
+Activar extensiones `pdo_mysql`, `mbstring`, `fileinfo` y `gd`; EXIF es opcional. Reiniciar Apache después de modificar PHP. El límite de PHP puede ser menor que el del panel; subir pocas fotos por vez es una alternativa.
+
+## Actualizar el código
+
+Copiar los nuevos archivos sobre la carpeta existente, conservando `config/local.php` y `storage`. No borrar la carpeta de imágenes ni importar de nuevo los SQL iniciales. Las futuras versiones indicarán si requieren una migración nueva.
+
+## Límites de esta versión
+
+Incluye acceso, fichas, campos de las categorías iniciales, fotos, filtros, previsualización y papelera. La edición de definiciones de categorías, las relaciones, los recorridos, la exportación y el seguimiento comercial están modelados pero sus pantallas todavía no están implementadas. El diseño es funcional y provisional.
+
+La instalación inicial sólo se permite desde loopback (`localhost`). Para hospedar en internet habrá que configurar usuario de base propio, HTTPS, respaldos y document root seguro. Apache debe respetar los `.htaccess` incluidos para bloquear `app`, `config`, `database`, `tests` y `storage`. No publicar con las credenciales de XAMPP. Las imágenes se entregan por `index.php?page=media` tras validar la sesión.
+
+## Si algo falla
+
+Revisar que Apache y MySQL estén activos, confirmar la conexión y consultar `storage/errors.log`. No compartir ese archivo completo si contiene rutas o datos privados. La prueba del modelo pasó en la instalación del usuario con MariaDB 10.4.32; esto no sustituye la prueba del panel con piezas reales.

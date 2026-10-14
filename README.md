@@ -4,11 +4,11 @@ Catálogo de antigüedades y objetos coleccionables, con venta por contacto y re
 
 ## Estado
 
-Primera versión del **modelo**, no una tienda operativa. Contiene esquema MySQL, categorías iniciales y especificación del panel. La estética, los precios, el canal de contacto y el proveedor de hosting siguen pendientes.
+Primera versión funcional del **panel privado**: acceso, carga y edición de piezas, campos por categoría, fotografías, filtros, previsualización y papelera. No hay tienda pública todavía. La estética, los precios, el canal de contacto y el proveedor de hosting siguen pendientes.
 
 ## Base propuesta
 
-PHP + MySQL, compatible con desarrollo local en XAMPP y alojamiento compartido. El esquema requiere **MySQL 8.0.16 o posterior**, InnoDB y una base con `utf8mb4`. Si XAMPP usa MariaDB, validar compatibilidad antes de importar; no se presupone que sean el mismo motor.
+PHP + MySQL, compatible con desarrollo local en XAMPP y alojamiento compartido. El esquema requiere **MySQL 8.0.16 o posterior**, InnoDB y una base con `utf8mb4`. La prueba SQL incluida pasó también en MariaDB 10.4.32 del XAMPP del usuario. El panel requiere PHP 8.2+ con PDO MySQL, GD y mbstring.
 
 1. Crear una base vacía `prodigo` con cotejamiento `utf8mb4_unicode_ci`.
 2. Importar `database/001_schema.sql` en esa base.
@@ -19,9 +19,10 @@ No se incluyen cuentas con contraseña por defecto, datos personales ni imágene
 
 ## Documentación
 
+- **[Instalar el panel en XAMPP](docs/xampp.md).**
 - [Modelo y reglas](docs/modelo.md).
 - [Panel y etapas de implementación](docs/panel.md).
 
 ## Siguiente etapa
 
-Implementar autenticación y la carga de piezas, fotografías y borradores. Luego categorías/campos editables, relaciones y recorridos; finalmente catálogo público y contacto. Este repositorio almacena código y migraciones: las fichas, imágenes y respaldos privados se guardan fuera de Git.
+Continuar con edición de categorías/campos, relaciones y recorridos; luego catálogo público y contacto. Este repositorio almacena código y migraciones: las fichas, imágenes y respaldos privados se guardan fuera de Git.
