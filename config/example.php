@@ -6,4 +6,7 @@ return [
     'db_name' => 'prodigo',
     'db_user' => 'root',
     'db_password' => '',
+    // Opcionales: completar en local.php cuando definas el canal de consultas.
+    'contact_email' => '',
+    'contact_whatsapp' => '', // Código de país y número, sin signos.
 ];

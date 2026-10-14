@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+if ($_SERVER['REQUEST_METHOD']==='GET' && !isset($_GET['page'])) { header('Location: catalogo.php'); exit; }
 require __DIR__ . '/app/bootstrap.php';
 require __DIR__ . '/app/catalog.php';
 require __DIR__ . '/app/views.php';

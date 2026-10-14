@@ -118,8 +118,50 @@ for image in sample_images:
 r = post('demo', {'csrf': token(r.text), 'action': 'install'})
 assert 'No se duplicó' in r.text
 assert get('list', q='DEMO-').text.count('class="piece-card card"') == 20
+# Frente público sin sesión: portada, catálogo, ficha e imágenes sólo publicadas.
+visitor = requests.Session()
+visitor.trust_env = False
+def public(path='catalogo.php', **params):
+    return visitor.get(base + path, params=params, timeout=30)
+assert public('index.php').url.endswith('catalogo.php')
+home = public()
+assert home.status_code == 200 and 'Objetos con' in home.text
+catalog = public(vista='catalogo')
+assert catalog.status_code == 200 and catalog.text.count('class="object-card"') == 18
+assert '[DEMO]' not in catalog.text  # Los títulos se limpian en la vista, la advertencia permanece.
+assert 'Muestra de demostración' in catalog.text
+assert public(vista='catalogo', categoria='radios').text.count('class="object-card"') == 2
+assert public(vista='catalogo', categoria='dibujos').text.count('class="object-card"') == 1
+assert public(vista='catalogo', q='Marca de ejemplo').text.count('class="object-card"') > 0
+assert public(vista='catalogo', estado='sold').text.count('class="object-card"') == 2
+assert public(vista='catalogo', orden='antiguas').status_code == 200
+assert public(vista='catalogo', q='<script>alert(1)</script>').status_code == 200
+assert '<script>alert(1)</script>' not in public(vista='catalogo', q='<script>alert(1)</script>').text
+assert public(pieza='demo-05-02').status_code == 404
+assert public(pieza='demo-10-02').status_code == 404
+item = public(pieza='demo-03-01')
+assert item.status_code == 200 and 'zoom-dialog' in item.text and 'Otras piezas' in item.text
+assert 'internal_notes' not in item.text and 'physical_location' not in item.text and 'SECRETO-' not in item.text
+assert 'Consultar por esta pieza' not in item.text  # Sin canal configurado no hay botón sin destino.
+public_image_id = int(re.search(r'imagen.php\?id=(\d+)', item.text).group(1))
+assert public('imagen.php', id=public_image_id, variant='web').headers['Content-Type'] == 'image/jpeg'
+# Aun con sesión de administrador, las fichas en borrador no se vuelven públicas.
+assert s.get(base+'catalogo.php', params={'pieza':'demo-05-02'}, timeout=30).status_code == 404
+chunks = re.findall(r'<article class="piece-card card">(.*?)</article>', examples, re.S)
+draft = next(chunk for chunk in chunks if 'DEMO-05-02' in chunk)
+draft_image_id = int(re.search(r'page=media[^"\s]*?id=(\d+)', draft).group(1))
+assert public('imagen.php', id=draft_image_id).status_code == 404
+assert public('imagen.php', id=public_image_id, variant='../../config/local.php').status_code == 404
+assert public(vista='azar').status_code == 200
+assert 'pieza=' in public(vista='azar').url
+private = public('index.php', page='list')
+assert 'Ingresá a Pródigo' in private.text
+
 r = post('demo', {'csrf': token(r.text), 'action': 'trash'})
 assert '20 ejemplos enviados a papelera' in r.text
+assert public(vista='catalogo').text.count('class="object-card"') == 0
+assert public('imagen.php', id=public_image_id).status_code == 404
+assert public(pieza='demo-03-01').status_code == 404
 assert get('list', q='DEMO-').text.count('class="piece-card card"') == 0
 assert get('list', trash=1, q='DEMO-').text.count('class="piece-card card"') == 20
 assert 'Editar ficha' in get('list').text  # La pieza propia sigue activa.
@@ -128,10 +170,11 @@ assert 'No se duplicó' in r.text
 assert get('list', q='DEMO-').text.count('class="piece-card card"') == 0
 r = post('demo', {'csrf': token(r.text), 'action': 'restore'})
 assert '20 ejemplos restaurados' in r.text
+assert public(vista='catalogo').text.count('class="object-card"') == 18
 assert get('list', q='DEMO-').text.count('class="piece-card card"') == 20
 
 r = post('logout', {'csrf': token(get('edit', id=piece_id).text)})
 assert 'Ingresá a Pródigo' in r.text
 r = post('login', {'csrf': token(r.text), 'email': 'test@example.invalid', 'password': password})
 assert 'Piezas' in r.text and 'Ingresá a Pródigo' not in r.text
-print('OK: instalación única, CSRF, fichas, campos, privacidad, publicación, JPEG, sesión, concurrencia, papelera, validación, login y 20 ejemplos sin duplicados con papelera/restauración.')
+print('OK: instalación única, CSRF, fichas, campos, privacidad, publicación, JPEG, sesión, concurrencia, papelera, validación, login, ejemplos y catálogo público con privacidad de fichas e imágenes.')

@@ -4,7 +4,7 @@ Catálogo de antigüedades y objetos coleccionables, con venta por contacto y re
 
 ## Estado
 
-Primera versión funcional del **panel privado**: acceso, carga y edición de piezas, campos por categoría, fotografías, filtros, previsualización y papelera. No hay tienda pública todavía. La estética, los precios, el canal de contacto y el proveedor de hosting siguen pendientes.
+Primera versión funcional del **panel privado**: acceso, carga y edición de piezas, campos por categoría, fotografías, filtros, previsualización y papelera. Incluye una V1 del catálogo para visitantes, con portada, filtros, ficha y galería. La raíz abre el catálogo; el panel está en `index.php?page=list`. La estética, los precios, el canal de contacto y el proveedor de hosting siguen pendientes.
 
 ## Base propuesta
 
@@ -25,4 +25,4 @@ No se incluyen cuentas con contraseña por defecto ni datos personales. En **Eje
 
 ## Siguiente etapa
 
-Continuar con edición de categorías/campos, relaciones y recorridos; luego catálogo público y contacto. Este repositorio almacena código y migraciones: las fichas, imágenes y respaldos privados se guardan fuera de Git.
+Continuar con edición de categorías/campos, relaciones y recorridos; ampliar los recorridos y definir el canal de contacto. Este repositorio almacena código y migraciones: las fichas, imágenes y respaldos privados se guardan fuera de Git.
