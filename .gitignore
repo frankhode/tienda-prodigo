@@ -1,0 +1,11 @@
+# Configuración privada y datos de operación
+.env
+.env.*
+!.env.example
+/config/local.php
+/storage/
+/uploads/
+/backups/
+/vendor/
+/node_modules/
+*.log
