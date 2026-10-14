@@ -1,0 +1,27 @@
+# Pródigo
+
+Catálogo de antigüedades y objetos coleccionables, con venta por contacto y recorridos de descubrimiento.
+
+## Estado
+
+Primera versión del **modelo**, no una tienda operativa. Contiene esquema MySQL, categorías iniciales y especificación del panel. La estética, los precios, el canal de contacto y el proveedor de hosting siguen pendientes.
+
+## Base propuesta
+
+PHP + MySQL, compatible con desarrollo local en XAMPP y alojamiento compartido. El esquema requiere **MySQL 8.0.16 o posterior**, InnoDB y una base con `utf8mb4`. Si XAMPP usa MariaDB, validar compatibilidad antes de importar; no se presupone que sean el mismo motor.
+
+1. Crear una base vacía `prodigo` con cotejamiento `utf8mb4_unicode_ci`.
+2. Importar `database/001_schema.sql` en esa base.
+3. Importar `database/002_categories.sql` una sola vez.
+4. Ejecutar `database/003_smoke_test.sql` en una base de prueba: verifica vínculos, privacidad, conjuntos y estados y revierte los datos al terminar.
+
+No se incluyen cuentas con contraseña por defecto, datos personales ni imágenes. No importar archivos de desarrollo encima de una base en uso. Las futuras modificaciones serán migraciones nuevas.
+
+## Documentación
+
+- [Modelo y reglas](docs/modelo.md).
+- [Panel y etapas de implementación](docs/panel.md).
+
+## Siguiente etapa
+
+Implementar autenticación y la carga de piezas, fotografías y borradores. Luego categorías/campos editables, relaciones y recorridos; finalmente catálogo público y contacto. Este repositorio almacena código y migraciones: las fichas, imágenes y respaldos privados se guardan fuera de Git.
