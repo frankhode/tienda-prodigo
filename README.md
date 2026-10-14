@@ -15,7 +15,7 @@ PHP + MySQL, compatible con desarrollo local en XAMPP y alojamiento compartido. 
 3. Importar `database/002_categories.sql` una sola vez.
 4. Ejecutar `database/003_smoke_test.sql` en una base de prueba: verifica vínculos, privacidad, conjuntos y estados y revierte los datos al terminar.
 
-No se incluyen cuentas con contraseña por defecto, datos personales ni imágenes. No importar archivos de desarrollo encima de una base en uso. Las futuras modificaciones serán migraciones nuevas.
+No se incluyen cuentas con contraseña por defecto ni datos personales. En **Ejemplos** podés generar 20 fichas ficticias e ilustraciones locales para probar el panel sin importar más SQL. No importar archivos de desarrollo encima de una base en uso. Las futuras modificaciones serán migraciones nuevas.
 
 ## Documentación
 

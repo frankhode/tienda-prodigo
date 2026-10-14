@@ -3,6 +3,7 @@ declare(strict_types=1);
 require __DIR__ . '/app/bootstrap.php';
 require __DIR__ . '/app/catalog.php';
 require __DIR__ . '/app/views.php';
+require __DIR__ . '/app/demo.php';
 $page=is_string($_GET['page']??null)?$_GET['page']:'list';
 $error=''; $user=null; $setup=false;
 try {
@@ -15,6 +16,12 @@ try {
         if ($page==='login' && !$setup) { do_login(); redirect('list'); }
         if (!$user) { http_response_code(403); throw new InvalidArgumentException('Ingresá para continuar.'); }
         if ($page==='logout') { $_SESSION=[]; session_destroy(); redirect('login'); }
+        if ($page==='demo') {
+            $action=choice('action',['install','trash','restore'],'install');
+            if ($action==='install') { $count=install_demo(); flash($count ? "$count piezas de ejemplo agregadas." : 'Los ejemplos ya están cargados. No se duplicó ninguna ficha.'); }
+            else { $count=demo_trash($action==='restore'); flash("$count ejemplos " . ($action==='restore'?'restaurados.':'enviados a papelera.')); }
+            redirect('demo');
+        }
         if ($page==='edit') {
             $id=id_param();
             if (isset($_POST['delete_image'])) {
@@ -40,6 +47,7 @@ header_view('Panel',$user);
 try {
     if (!$user && in_array($page,['login','setup'],true)) login_view($setup,$error);
     elseif (!$user) { ?><section class="card"><h1>Conectemos la base de datos</h1><div class="notice error"><?=h($error)?></div><p>Iniciá MySQL en XAMPP, verificá que exista la base prodigo e importá el esquema y las categorías. Si cambiaste los datos de conexión, copiá config/example.php como config/local.php y editá esa copia.</p><a class="button" href="index.php">Volver a comprobar</a></section><?php }
+    elseif ($page==='demo') demo_view($error);
     elseif ($page==='edit') edit_view(id_param(),$error);
     elseif ($page==='preview') preview_view(id_param());
     else list_view($error);

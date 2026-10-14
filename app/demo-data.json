@@ -1,0 +1,376 @@
+[
+  {
+    "code": "DEMO-01-01",
+    "category": "fotografias",
+    "variant": 1,
+    "title": "[DEMO] Retrato de estudio sobre cartón",
+    "year": 1890,
+    "dimensions": "10 × 6 cm",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nRetrato individual presentado sobre cartón, pensado para probar la descripción de una fotografía antigua.",
+    "fields": {
+      "fotografo_o_estudio": "Estudio sin identificar (ejemplo)",
+      "tecnica": "Albúmina (dato ficticio)",
+      "soporte": "Papel sobre cartón",
+      "formato": "Carte de visite"
+    },
+    "availability": "available",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-01-02",
+    "category": "fotografias",
+    "variant": 2,
+    "title": "[DEMO] Vista urbana en blanco y negro",
+    "year": 1930,
+    "dimensions": "18 × 24 cm",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nUna escena de calle permite ensayar una ficha centrada en el lugar, la época y los detalles de la imagen.",
+    "fields": {
+      "fotografo_o_estudio": "Autor no identificado",
+      "tecnica": "Gelatina de plata (dato ficticio)",
+      "soporte": "Papel fotográfico",
+      "formato": "Copia suelta"
+    },
+    "availability": "not_for_sale",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-02-01",
+    "category": "maquinas-de-escribir",
+    "variant": 1,
+    "title": "[DEMO] Máquina de escribir de oficina",
+    "year": 1935,
+    "dimensions": "39 × 36 × 25 cm",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nEjemplo de máquina de sobremesa con teclado mecánico y carro ancho. Sirve para comparar la ficha técnica con la de otros objetos.",
+    "fields": {
+      "marca": "Marca de ejemplo",
+      "modelo": "Oficina 35 (ficticio)",
+      "mecanismo": "Mecánico, de sobremesa",
+      "funcionamiento": "Sin comprobar; dato de demostración"
+    },
+    "availability": "available",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-02-02",
+    "category": "maquinas-de-escribir",
+    "variant": 2,
+    "title": "[DEMO] Máquina portátil con estuche",
+    "year": 1960,
+    "dimensions": "30 × 28 × 12 cm",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nUna portátil compacta con su estuche, presentada como una sola unidad de venta.",
+    "fields": {
+      "marca": "Marca de ejemplo",
+      "modelo": "Portátil 60 (ficticio)",
+      "mecanismo": "Mecánico, portátil",
+      "funcionamiento": "Requiere revisión; dato de demostración"
+    },
+    "availability": "reserved",
+    "publication_status": "published",
+    "unit_type": "set",
+    "component_count": 2
+  },
+  {
+    "code": "DEMO-03-01",
+    "category": "radios",
+    "variant": 1,
+    "title": "[DEMO] Radio de mesa con gabinete de madera",
+    "year": 1940,
+    "dimensions": "48 × 24 × 31 cm",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nGabinete de madera y frente con rejilla. Permite probar una ficha que combina diseño, material y funcionamiento.",
+    "fields": {
+      "marca": "Marca de ejemplo",
+      "modelo": "Mesa 40 (ficticio)",
+      "bandas": "AM y onda corta (ejemplo)",
+      "funcionamiento": "No conectar sin revisión técnica"
+    },
+    "availability": "available",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-03-02",
+    "category": "radios",
+    "variant": 2,
+    "title": "[DEMO] Radio portátil de dos perillas",
+    "year": 1965,
+    "dimensions": "25 × 10 × 17 cm",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nEjemplo de radio compacta para el uso cotidiano, con asa y mandos sencillos.",
+    "fields": {
+      "marca": "Marca de ejemplo",
+      "modelo": "Portátil 65 (ficticio)",
+      "bandas": "AM (ejemplo)",
+      "funcionamiento": "Sin comprobar; dato de demostración"
+    },
+    "availability": "sold",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-04-01",
+    "category": "televisores",
+    "variant": 1,
+    "title": "[DEMO] Televisor de gabinete de madera",
+    "year": 1960,
+    "dimensions": "65 × 40 × 48 cm",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nPantalla de tubo y gabinete de madera. Ejemplo de objeto voluminoso que podría requerir retiro coordinado.",
+    "fields": {
+      "marca": "Marca de ejemplo",
+      "modelo": "Salón 60 (ficticio)",
+      "tecnologia": "Tubo CRT, blanco y negro",
+      "funcionamiento": "Sin comprobar; no conectar sin revisión"
+    },
+    "availability": "available",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-04-02",
+    "category": "televisores",
+    "variant": 2,
+    "title": "[DEMO] Televisor compacto de sobremesa",
+    "year": 1975,
+    "dimensions": "40 × 30 × 33 cm",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nUn televisor pequeño permite ensayar una ficha centrada en diseño doméstico y cultura visual.",
+    "fields": {
+      "marca": "Marca de ejemplo",
+      "modelo": "Compacto 75 (ficticio)",
+      "tecnologia": "Tubo CRT, blanco y negro",
+      "funcionamiento": "Pieza de exhibición; dato ficticio"
+    },
+    "availability": "not_for_sale",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-05-01",
+    "category": "dibujos",
+    "variant": 1,
+    "title": "[DEMO] Estudio de retrato a lápiz",
+    "year": 1950,
+    "dimensions": "32 × 24 cm",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nDibujo de estudio con trazo visible. Ejemplo de obra sin atribución documentada.",
+    "fields": {
+      "autor": "Autor no identificado",
+      "tecnica": "Grafito",
+      "soporte": "Papel"
+    },
+    "availability": "available",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-05-02",
+    "category": "dibujos",
+    "variant": 2,
+    "title": "[DEMO] Apunte de figura en tinta",
+    "year": 1970,
+    "dimensions": "28 × 21 cm",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nUn apunte de figura permite probar el detalle de línea, el estado del papel y una descripción breve.",
+    "fields": {
+      "autor": "Autor no identificado",
+      "tecnica": "Tinta",
+      "soporte": "Papel crema"
+    },
+    "availability": "available",
+    "publication_status": "draft",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-06-01",
+    "category": "pinturas",
+    "variant": 1,
+    "title": "[DEMO] Paisaje de sierras al óleo",
+    "year": 1945,
+    "dimensions": "40 × 50 cm sin marco",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nUna vista de sierras con paleta terrosa, usada para probar los campos de una pintura.",
+    "fields": {
+      "autor": "Autor sin identificar",
+      "tecnica": "Óleo",
+      "soporte": "Tela sobre bastidor"
+    },
+    "availability": "reserved",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-06-02",
+    "category": "pinturas",
+    "variant": 2,
+    "title": "[DEMO] Paisaje con cielo abierto",
+    "year": 1960,
+    "dimensions": "30 × 40 cm sin marco",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nEjemplo de pintura de pequeño formato que puede vincularse visualmente con fotografías y estampas.",
+    "fields": {
+      "autor": "Autor sin identificar",
+      "tecnica": "Óleo",
+      "soporte": "Tabla"
+    },
+    "availability": "available",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-07-01",
+    "category": "grabados",
+    "variant": 1,
+    "title": "[DEMO] Paisaje en xilografía",
+    "year": 1940,
+    "dimensions": "20 × 25 cm, imagen",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nEstampa de paisaje con contraste y trama. Ejemplo para registrar técnica y datos de edición.",
+    "fields": {
+      "autor": "Autor no identificado",
+      "tecnica": "Xilografía",
+      "edicion_o_numeracion": "Ejemplar sin numerar (ejemplo)"
+    },
+    "availability": "not_for_sale",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-07-02",
+    "category": "grabados",
+    "variant": 2,
+    "title": "[DEMO] Estampa de paisaje numerada",
+    "year": 1970,
+    "dimensions": "25 × 32 cm, hoja",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nEjemplo de estampa numerada para comparar la descripción de obra múltiple con la de una pintura.",
+    "fields": {
+      "autor": "Autor no identificado",
+      "tecnica": "Aguafuerte (dato ficticio)",
+      "edicion_o_numeracion": "12/50 (dato ficticio)"
+    },
+    "availability": "available",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-08-01",
+    "category": "botellas",
+    "variant": 1,
+    "title": "[DEMO] Frasco de botica de vidrio verde",
+    "year": 1920,
+    "dimensions": "24 cm de alto",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nFrasco de silueta sencilla con etiqueta. Ejemplo de pieza cuyo interés puede estar en el material y el uso.",
+    "fields": {
+      "fabricante": "Sin identificar",
+      "marca_comercial": "Botica de ejemplo (ficticia)",
+      "material": "Vidrio verde",
+      "uso": "Farmacia (ejemplo)"
+    },
+    "availability": "available",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-08-02",
+    "category": "botellas",
+    "variant": 2,
+    "title": "[DEMO] Botella de vidrio ámbar con etiqueta",
+    "year": 1950,
+    "dimensions": "29 cm de alto",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nBotella de vidrio coloreado, pensada como ejemplo accesible de cultura material cotidiana.",
+    "fields": {
+      "fabricante": "Sin identificar",
+      "marca_comercial": "Marca ficticia",
+      "material": "Vidrio ámbar",
+      "uso": "Envase comercial"
+    },
+    "availability": "sold",
+    "publication_status": "published",
+    "unit_type": "object",
+    "component_count": null
+  },
+  {
+    "code": "DEMO-09-01",
+    "category": "naipes",
+    "variant": 1,
+    "title": "[DEMO] Baraja española en estuche",
+    "year": 1955,
+    "dimensions": "9 × 6 cm por naipe",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nConjunto de naipes presentado como una única unidad de venta. Permite registrar cantidad e integridad.",
+    "fields": {
+      "fabricante": "Fabricante de ejemplo",
+      "tipo_de_baraja": "Española",
+      "cantidad": "40",
+      "integridad": "Completa (dato ficticio)"
+    },
+    "availability": "available",
+    "publication_status": "published",
+    "unit_type": "set",
+    "component_count": 40
+  },
+  {
+    "code": "DEMO-09-02",
+    "category": "naipes",
+    "variant": 2,
+    "title": "[DEMO] Baraja francesa de colección",
+    "year": 1970,
+    "dimensions": "9 × 6 cm por naipe",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nUna segunda baraja permite comparar tipos y dejar explícita la falta de un componente.",
+    "fields": {
+      "fabricante": "Fabricante de ejemplo",
+      "tipo_de_baraja": "Francesa",
+      "cantidad": "51",
+      "integridad": "Incompleta: falta un naipe (ejemplo)"
+    },
+    "availability": "available",
+    "publication_status": "published",
+    "unit_type": "set",
+    "component_count": 51
+  },
+  {
+    "code": "DEMO-10-01",
+    "category": "figuritas",
+    "variant": 1,
+    "title": "[DEMO] Lote de figuritas de fútbol",
+    "year": 1965,
+    "dimensions": "6 × 4 cm cada una",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nConjunto de figuritas deportivas con numeración diversa. Se gestiona como un solo lote.",
+    "fields": {
+      "editorial": "Editorial ficticia",
+      "coleccion": "Fútbol de ejemplo",
+      "numero": "Varios números",
+      "suelta_o_conjunto": "Conjunto de 12"
+    },
+    "availability": "available",
+    "publication_status": "published",
+    "unit_type": "set",
+    "component_count": 12
+  },
+  {
+    "code": "DEMO-10-02",
+    "category": "figuritas",
+    "variant": 2,
+    "title": "[DEMO] Lote de figuritas de astronomía",
+    "year": 1970,
+    "dimensions": "6 × 4 cm cada una",
+    "description": "EJEMPLO FICTICIO. La ilustración y todos los datos de esta ficha son de demostración; no describen una pieza real.\n\nPequeña selección temática para probar conjuntos y contenidos de interés más allá del precio.",
+    "fields": {
+      "editorial": "Editorial ficticia",
+      "coleccion": "El cielo (ejemplo)",
+      "numero": "Varios números",
+      "suelta_o_conjunto": "Conjunto de 6"
+    },
+    "availability": "not_for_sale",
+    "publication_status": "draft",
+    "unit_type": "set",
+    "component_count": 6
+  }
+]

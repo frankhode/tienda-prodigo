@@ -20,6 +20,14 @@ Disponibilidad inicial: «Fuera de venta». Cambiar a «Disponible» cuando corr
 
 La papelera conserva la ficha y fotos y permite restaurarla. No es necesario editar directamente las tablas para gestionar piezas.
 
+## Cargar 20 piezas de ejemplo
+
+Actualizar el código y entrar al panel. En el menú **Ejemplos**, pulsar **Cargar los 20 ejemplos**. Se generan dos fichas por categoría, cada una con dos ilustraciones esquemáticas (vista general y detalle), campos específicos y datos ficticios. Los códigos empiezan con `DEMO-` y los títulos con `[DEMO]`.
+
+No se importa SQL ni se requieren nuevas tablas. Repetir la carga agrega sólo los códigos que falten; no sobrescribe fichas ni restaura las que enviaste a papelera. Desde la misma pantalla podés enviar todos los ejemplos a papelera o restaurarlos. Los datos y las imágenes se conservan. Podés editarlos como cualquier ficha para probar el panel.
+
+Las imágenes se dibujan localmente con GD: no se descargan archivos externos. Las fechas, atribuciones y estados son ficticios. No usar estas fichas como descripción de objetos reales.
+
 ## Fotografías
 
 - JPG, PNG y WebP; no TIFF ni SVG.

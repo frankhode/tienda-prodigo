@@ -102,8 +102,36 @@ r = post('edit', {**common, 'csrf': token(new.text), 'title': 'TEST Archivo inv�
 assert 'Usá fotos JPG' in r.text
 assert 'TEST Archivo inválido' not in get().text
 
+# Los ejemplos se cargan una sola vez, generan fotos y no afectan las piezas propias.
+r = post('demo', {'csrf': token(get('demo').text), 'action': 'install'})
+assert '20 piezas de ejemplo agregadas' in r.text, re.findall(r'<div class="notice error"[^>]*>(.*?)</div>', r.text, re.S)
+examples = get('list', q='DEMO-').text
+assert examples.count('class="piece-card card"') == 20
+for cat in range(1, 11):
+    assert get('list', q='DEMO-', category=cat).text.count('class="piece-card card"') == 2
+assert 'DEMO-01-01' in examples and 'DEMO-10-02' in examples
+sample_images = re.findall(r'page=media[^"\s]*?id=(\d+)', examples)
+assert len(sample_images) == 20
+for image in sample_images:
+    media = get('media', id=image, variant='web')
+    assert media.content[:2] == b'\xff\xd8'
+r = post('demo', {'csrf': token(r.text), 'action': 'install'})
+assert 'No se duplicó' in r.text
+assert get('list', q='DEMO-').text.count('class="piece-card card"') == 20
+r = post('demo', {'csrf': token(r.text), 'action': 'trash'})
+assert '20 ejemplos enviados a papelera' in r.text
+assert get('list', q='DEMO-').text.count('class="piece-card card"') == 0
+assert get('list', trash=1, q='DEMO-').text.count('class="piece-card card"') == 20
+assert 'Editar ficha' in get('list').text  # La pieza propia sigue activa.
+r = post('demo', {'csrf': token(r.text), 'action': 'install'})
+assert 'No se duplicó' in r.text
+assert get('list', q='DEMO-').text.count('class="piece-card card"') == 0
+r = post('demo', {'csrf': token(r.text), 'action': 'restore'})
+assert '20 ejemplos restaurados' in r.text
+assert get('list', q='DEMO-').text.count('class="piece-card card"') == 20
+
 r = post('logout', {'csrf': token(get('edit', id=piece_id).text)})
 assert 'Ingresá a Pródigo' in r.text
 r = post('login', {'csrf': token(r.text), 'email': 'test@example.invalid', 'password': password})
 assert 'Piezas' in r.text and 'Ingresá a Pródigo' not in r.text
-print('OK: instalación única, CSRF, fichas, campos, privacidad, publicación, JPEG, sesión, concurrencia, papelera, validación y login.')
+print('OK: instalación única, CSRF, fichas, campos, privacidad, publicación, JPEG, sesión, concurrencia, papelera, validación, login y 20 ejemplos sin duplicados con papelera/restauración.')
