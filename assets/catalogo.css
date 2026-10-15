@@ -65,3 +65,11 @@ body{padding-top:52px}html{scroll-padding-top:64px}
 .material-tile>span:last-child{position:absolute;top:14px;right:16px;font-size:18px;line-height:1}
 @media(max-width:650px){.home-identity{gap:18px;padding:26px 0}.home-logo{width:68px}.home-identity h1{font-size:clamp(45px,12vw,76px)}.home-materials{grid-template-columns:repeat(2,minmax(0,1fr))}.material-tile{min-height:120px;padding:34px 14px 18px;font-size:clamp(17px,4vw,23px)}.home-catalog,.home-surprise{min-height:74px;padding:18px;font-size:30px}}
 @media(max-width:340px){.home-materials{grid-template-columns:1fr}.material-tile{min-height:95px;font-size:22px}.home-identity{gap:12px}.home-logo{width:52px}.home-identity h1{font-size:42px}}
+
+/* Portada sin barra superior; accesos con rótulos centrados. */
+body.minimal-home{padding-top:0}
+.minimal-home .home-identity{padding-top:40px;padding-bottom:32px}
+.home-catalog,.home-surprise,.material-tile{justify-content:center;text-align:center}
+.material-tile{align-items:center;padding:24px 18px}
+.home-catalog>span:last-child,.home-surprise>span:last-child,.material-tile>span:last-child{display:none}
+@media(max-width:650px){.minimal-home .home-identity{padding-top:30px;padding-bottom:26px}.material-tile{padding:20px 14px}}
