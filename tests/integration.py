@@ -227,8 +227,55 @@ assert '20 ejemplos restaurados' in r.text
 assert public(vista='catalogo').text.count('class="object-card"') == 18
 assert get('list', q='DEMO-').text.count('class="piece-card card"') == 20
 
+# Duplicación: códigos nuevos, borrador y fotos independientes del origen.
+from urllib.parse import parse_qs, urlparse
+r = post('duplicate&id='+str(piece_id), {'csrf':token(get('edit',id=piece_id).text),'with_images':'1'})
+assert 'Copia creada como borrador' in r.text
+copy_id = int(parse_qs(urlparse(r.url).query)['id'][0])
+assert copy_id != piece_id
+assert 'value="draft" selected' in r.text and 'value="not_for_sale" selected' in r.text
+assert 'Marca de prueba' in r.text and 'SECRETO-UBICACION' in r.text
+copy_image_id = int(re.search(r'name="cover" value="(\d+)"',r.text).group(1))
+assert copy_image_id != image_id
+# Quitar la imagen al guardar el origen no rompe su copia.
+source_editor = get('edit',id=piece_id)
+r = post('edit&id='+str(piece_id), {**common,'csrf':token(source_editor.text),
+         'version':token(source_editor.text,'version'),'remove_images[]':str(image_id)})
+assert 'Ficha guardada' in r.text
+assert get('media',id=copy_image_id).headers['Content-Type']=='image/jpeg'
+assert s.get(base+'index.php',params={'page':'media','id':image_id},timeout=30).status_code==404
+r = post('duplicate&id='+str(copy_id), {'csrf':token(get('edit',id=copy_id).text)})
+assert 'Copia creada como borrador' in r.text
+empty_copy_id=int(parse_qs(urlparse(r.url).query)['id'][0])
+assert 'name="cover"' not in r.text
+# El formulario de ABM tiene todos los campos, incluso los que luego se ocultan en JS.
+assert 'editor-shell' in r.text and 'data-step="identity"' in r.text
+assert 'data-step="photos"' in r.text and 'data-fields-category="3"' in r.text
+r = post('edit', {**common,'csrf':token(r.text),'title':'TEST Carga repetida',
+                 '_wizard':'1','after_save':'new'})
+assert 'repeat=1' in r.url
+assert re.search(r'name="categories\[\]" value="3" checked',r.text)
+r = post('edit', {**common,'csrf':token(r.text),'title':'TEST Carga final',
+                 '_wizard':'1','after_save':'list'})
+assert 'page=list' in r.url and 'Ficha guardada' in r.text
+# Una falla al publicar conserva las fotos marcadas para quitar.
+copy_editor=get('edit',id=copy_id)
+r = post('edit&id='+str(copy_id), {**common,'csrf':token(copy_editor.text),
+         'version':token(copy_editor.text,'version'),'publication_status':'published',
+         'remove_images[]':str(copy_image_id)})
+assert 'Para publicar' in r.text
+assert get('media',id=copy_image_id).headers['Content-Type']=='image/jpeg'
+# Ficheros para la prueba DOM del asistente, sobre HTML real generado por PHP.
+import os
+if os.environ.get('PRODIGO_DOM_FIXTURE_DIR'):
+    from pathlib import Path
+    fixture=Path(os.environ['PRODIGO_DOM_FIXTURE_DIR'])
+    fixture.mkdir(parents=True,exist_ok=True)
+    (fixture/'new.html').write_text(get('edit').text)
+    (fixture/'edit.html').write_text(get('edit',id=copy_id).text)
+
 r = post('logout', {'csrf': token(get('edit', id=piece_id).text)})
 assert 'Ingresá a Pródigo' in r.text
 r = post('login', {'csrf': token(r.text), 'email': 'test@example.invalid', 'password': password})
 assert 'Piezas' in r.text and 'Ingresá a Pródigo' not in r.text
-print('OK: instalación única, CSRF, fichas, campos, privacidad, publicación, JPEG, sesión, concurrencia, papelera, validación, login, ejemplos y catálogo, plantillas y vistas previas con privacidad de fichas e imágenes.')
+print('OK: instalación única, CSRF, fichas, campos, privacidad, publicación, JPEG, sesión, concurrencia, papelera, validación, login, ejemplos y catálogo, plantillas, duplicación independiente y ABM con privacidad de fichas e imágenes.')

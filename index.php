@@ -23,6 +23,11 @@ try {
             else { $count=demo_trash($action==='restore'); flash("$count ejemplos " . ($action==='restore'?'restaurados.':'enviados a papelera.')); }
             redirect('demo');
         }
+        if($page==='duplicate') {
+            $id=duplicate_piece(id_param(),!empty($_POST['with_images']));
+            flash('Copia creada como borrador, con código propio. Revisala antes de publicar.');
+            redirect('edit',['id'=>$id]);
+        }
         if ($page==='edit') {
             $id=id_param();
             if(isset($_POST['enable_templates'])) {
@@ -33,7 +38,13 @@ try {
             if (isset($_POST['delete_image'])) {
                 delete_image($id,(int)$_POST['delete_image']); flash('Foto eliminada.'); redirect('edit',['id'=>$id]);
             }
-            $id=save_piece($id); flash('Ficha guardada.'); redirect('edit',['id'=>$id]);
+            $id=save_piece($id); flash('Ficha guardada.');
+            if(!empty($_POST['_wizard'])) {
+                $_SESSION['last_categories']=array_map('intval',$_POST['categories']??[]);
+                if(($_POST['after_save']??'')==='new') redirect('edit',['repeat'=>1]);
+                redirect('list',$_SESSION['list_params']??[]);
+            }
+            redirect('edit',['id'=>$id]);
         }
         if ($page==='trash'||$page==='restore') { trash_piece(id_param(),$page==='restore'); flash($page==='restore'?'Pieza restaurada.':'Pieza enviada a papelera.'); redirect('list',$_SESSION['list_params']??[]); }
     }

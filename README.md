@@ -4,7 +4,7 @@ Catálogo de antigüedades y objetos coleccionables, con venta por contacto y re
 
 ## Estado
 
-Primera versión funcional del **panel privado**: acceso, carga y edición de piezas, campos por categoría, fotografías, filtros, previsualización y papelera. Incluye una V1 del catálogo para visitantes, con portada, filtros, ficha y galería. Incluye plantillas por pieza (paneles y wallpaper) con tipografías, contraste y encuadre configurables desde la ficha. La raíz abre el catálogo; el panel está en `index.php?page=list`. La estética, los precios, el canal de contacto y el proveedor de hosting siguen pendientes.
+Panel privado con **modal ABM por pasos**, navegación con teclado, duplicación opcional con fotos independientes y borrado recuperable. Incluye: acceso, carga y edición de piezas, campos por categoría, fotografías, filtros, previsualización y papelera. Incluye una V1 del catálogo para visitantes, con portada, filtros, ficha y galería. Incluye plantillas por pieza (paneles y wallpaper) con tipografías, contraste y encuadre configurables desde la ficha. La raíz abre el catálogo; el panel está en `index.php?page=list`. La estética, los precios, el canal de contacto y el proveedor de hosting siguen pendientes.
 
 ## Base propuesta
 

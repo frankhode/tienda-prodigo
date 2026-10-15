@@ -37,7 +37,7 @@ Los campos específicos se guardan como texto; el servicio valida su tipo según
 
 Cada imagen puede ser de presentación, descriptiva o detalle. La portada debe pertenecer a la propia pieza, restricción garantizada por clave compuesta. El punto focal permite adaptar el encuadre sin modificar la foto. Una imagen tiene variantes miniatura, web y zoom con dimensiones y tamaño registrados.
 
-Guardar una clave relativa y el proveedor (`local` inicialmente), nunca rutas de Windows ni enlaces temporales firmados. Un servicio de almacenamiento resolverá la URL; permitirá migrar a almacenamiento externo sin cambiar fichas. Los originales se conservarán aparte con respaldo. La duplicación de fichas no duplicará archivos silenciosamente: inicialmente copiará datos a un borrador sin imágenes ni relaciones.
+Guardar una clave relativa y el proveedor (`local` inicialmente), nunca rutas de Windows ni enlaces temporales firmados. Un servicio de almacenamiento resolverá la URL; permitirá migrar a almacenamiento externo sin cambiar fichas. Los originales se conservarán aparte con respaldo. La duplicación crea un borrador con código propio; permite incluir fotos mediante una opción explícita, copiando sus archivos para que original y copia sean independientes. No duplica operaciones comerciales.
 
 ## Descubrimiento
 

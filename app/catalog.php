@@ -107,7 +107,7 @@ function save_piece(int $id): int {
         $values[]=[$def['category_id'],$def['field_key'],$v];
     }
     $presentation=presentation_ready()?presentation_input():null;
-    $batch=prepare_uploads();
+    $batch=prepare_uploads(); $deletedFiles=[];
     try {
         db()->beginTransaction();
         if ($id) {
@@ -138,7 +138,20 @@ function save_piece(int $id): int {
             else query('INSERT INTO piece_field_values (piece_id,category_id,field_key,value_text) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE value_text=VALUES(value_text)',[$id,$cat,$key,$value]);
         }
         query('INSERT INTO piece_private (piece_id,physical_location,internal_notes) VALUES (?,?,?) ON DUPLICATE KEY UPDATE physical_location=VALUES(physical_location),internal_notes=VALUES(internal_notes)',[$id,$location,$notes]);
-        $images=piece_images($id); $validImages=array_map('intval',array_column($images,'id'));
+        $removedImages=$_POST['remove_images']??[];
+        if(!is_array($removedImages)) throw new InvalidArgumentException('Revisá las fotos a eliminar.');
+        $removedImages=array_values(array_unique(array_map('intval',$removedImages)));
+        $images=piece_images($id);
+        $imageIds=array_map('intval',array_column($images,'id'));
+        foreach($removedImages as $imageId) {
+            if(!in_array($imageId,$imageIds,true)) throw new InvalidArgumentException('Una foto a eliminar no pertenece a esta pieza.');
+            foreach(query('SELECT storage_key FROM image_variants WHERE image_id=?',[$imageId])->fetchAll() as $row) { image_key($row['storage_key']); $deletedFiles[]=$row['storage_key']; }
+            query('DELETE FROM piece_cover WHERE piece_id=? AND image_id=?',[$id,$imageId]);
+            query('DELETE FROM image_variants WHERE image_id=?',[$imageId]);
+            query('DELETE FROM images WHERE id=? AND piece_id=?',[$imageId,$id]);
+        }
+        $images=array_values(array_filter($images,fn($image)=>!in_array((int)$image['id'],$removedImages,true)));
+        $validImages=array_map('intval',array_column($images,'id'));
         $imageMeta=$_POST['image_meta'] ?? [];
         if (!is_array($imageMeta)) throw new InvalidArgumentException('Datos de fotos incorrectos.');
         foreach ($images as $image) {
@@ -156,6 +169,7 @@ function save_piece(int $id): int {
             foreach ($item['variants'] as $variant=>$v) query('INSERT INTO image_variants (image_id,variant,storage_key,mime_type,width,height,byte_size) VALUES (?,?,?,?,?,?,?)',[$imageId,$variant,$v['key'],'image/jpeg',$v['width'],$v['height'],$v['bytes']]);
         }
         $cover=(int)($_POST['cover']??0);
+        if(in_array($cover,$removedImages,true)) $cover=0;
         if (!$cover) $cover=(int)($firstNew??($images[0]['id']??0));
         if ($cover && !in_array($cover,$validImages,true)) throw new InvalidArgumentException('La portada debe ser una foto de esta pieza.');
         if ($cover) query('INSERT INTO piece_cover VALUES (?,?) ON DUPLICATE KEY UPDATE image_id=VALUES(image_id)',[$id,$cover]);
@@ -164,7 +178,9 @@ function save_piece(int $id): int {
             query('UPDATE pieces SET published_at=COALESCE(published_at,CURRENT_TIMESTAMP) WHERE id=?',[$id]);
         }
         if($presentation!==null) presentation_save($id,$presentation);
-        db()->commit(); return $id;
+        db()->commit();
+        foreach($deletedFiles as $key) { $path=image_key($key); if(is_file($path)) @unlink($path); $dir=dirname($path); if(is_dir($dir)&&count(@scandir($dir)?:[])===2) @rmdir($dir); }
+        return $id;
     } catch (Throwable $e) { if (db()->inTransaction()) db()->rollBack(); remove_generated($batch); throw $e; }
 }
 function trash_piece(int $id, bool $restore): void {
@@ -194,4 +210,43 @@ function delete_image(int $pieceId, int $imageId): void {
     } catch (Throwable $e) { db()->rollBack(); throw $e; }
     foreach ($keys as $key) { $path=image_key($key); if (is_file($path)) unlink($path); }
     if ($keys) { $dir=dirname(image_key($keys[0])); if (is_dir($dir)) rmdir($dir); }
+}
+
+function duplicate_piece(int $sourceId,bool $withImages): int {
+    $copies=[];
+    try {
+        db()->beginTransaction();
+        query('SELECT id FROM pieces WHERE id=? FOR UPDATE',[$sourceId]);
+        $source=get_piece($sourceId);
+        if($source['deleted_at']) throw new InvalidArgumentException('Restaurá la pieza antes de duplicarla.');
+        $columns=['title','unit_type','component_count','description','dating_label','year_from','year_to','dating_certainty','dimensions_label','condition_description','provenance_public','price_mode','price_amount','price_currency'];
+        $values=array_map(fn($key)=>$source[$key],$columns);
+        $values[0]=mb_substr($source['title'],0,246).' (copia)';
+        $temporary='draft-'.bin2hex(random_bytes(16));
+        query('INSERT INTO pieces ('.implode(',',$columns).',code,slug,publication_status,availability) VALUES ('.implode(',',array_fill(0,count($columns)+4,'?')).')',[...$values,$temporary,$temporary,'draft','not_for_sale']);
+        $id=(int)db()->lastInsertId(); $code='PR-'.str_pad((string)$id,6,'0',STR_PAD_LEFT);
+        query('UPDATE pieces SET code=?,slug=? WHERE id=?',[$code,strtolower($code),$id]);
+        query('INSERT INTO piece_categories (piece_id,category_id) SELECT ?,category_id FROM piece_categories WHERE piece_id=?',[$id,$sourceId]);
+        query('INSERT INTO piece_field_values (piece_id,category_id,field_key,value_text) SELECT ?,category_id,field_key,value_text FROM piece_field_values WHERE piece_id=?',[$id,$sourceId]);
+        query('INSERT INTO piece_terms (piece_id,term_id) SELECT ?,term_id FROM piece_terms WHERE piece_id=?',[$id,$sourceId]);
+        query('INSERT INTO piece_private (piece_id,physical_location,acquired_on,acquisition_cost,cost_currency,acquisition_source,internal_notes) SELECT ?,physical_location,acquired_on,acquisition_cost,cost_currency,acquisition_source,internal_notes FROM piece_private WHERE piece_id=?',[$id,$sourceId]);
+        if(presentation_ready()) presentation_save($id,presentation_get($sourceId));
+        if($withImages) foreach(piece_images($sourceId) as $image) {
+            $token=bin2hex(random_bytes(16)); $batch=['token'=>$token,'variants'=>[]];
+            ensure_storage();
+            if(!mkdir(STORAGE.'/images/'.$token,0770,true)) throw new RuntimeException('No se pudo copiar la imagen.');
+            $copies[]=$batch; $pos=count($copies)-1;
+            query('INSERT INTO images (piece_id,role,position,alt_text,caption,focal_x,focal_y) VALUES (?,?,?,?,?,?,?)',[$id,$image['role'],$image['position'],$image['alt_text'],$image['caption'],$image['focal_x'],$image['focal_y']]);
+            $newImage=(int)db()->lastInsertId();
+            foreach(query('SELECT * FROM image_variants WHERE image_id=?',[$image['id']])->fetchAll() as $variant) {
+                if($variant['storage_backend']!=='local') throw new InvalidArgumentException('Esta imagen necesita copia desde su almacenamiento externo.');
+                $from=image_key($variant['storage_key']); $key=$token.'/'.$variant['variant'].'.jpg';
+                $copies[$pos]['variants'][$variant['variant']]=['key'=>$key];
+                if(!is_file($from)||!copy($from,image_key($key))) throw new RuntimeException('No se pudo copiar una foto.');
+                query('INSERT INTO image_variants (image_id,variant,storage_key,mime_type,width,height,byte_size) VALUES (?,?,?,?,?,?,?)',[$newImage,$variant['variant'],$key,$variant['mime_type'],$variant['width'],$variant['height'],$variant['byte_size']]);
+            }
+            if($image['is_cover']) query('INSERT INTO piece_cover VALUES (?,?)',[$id,$newImage]);
+        }
+        db()->commit(); return $id;
+    } catch(Throwable $e) { if(db()->inTransaction()) db()->rollBack(); remove_generated($copies); throw $e; }
 }

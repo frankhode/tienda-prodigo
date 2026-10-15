@@ -1,5 +1,8 @@
 # Panel de administración
 
+La carga y edición actual se realizan en un modal ABM por pasos, con Enter para avanzar, Escape para retroceder y Tab para campos. Fotos al final; pasos de material según categorías. Ver [uso en XAMPP](xampp.md#carga-y-edición-por-teclado-abm).
+
+
 ## Trabajo diario
 
 Listado con miniatura, código, título, categorías, publicación y disponibilidad. Buscar por código/título y filtrar por categoría, disponibilidad, publicación y selección. Al volver de una ficha, conservar filtros y posición. Acciones múltiples para selección, archivo y disponibilidad, con resultado visible y posibilidad de corregir.

@@ -10,6 +10,31 @@ La base `prodigo` ya creada sirve para este panel. **No vuelvas a importar el es
 
 El panel se conecta a `127.0.0.1:3306`, base `prodigo`, usuario `root`, contraseña vacía: valores habituales de XAMPP local. Si tu instalación es diferente, copiar `config/example.php` como `config/local.php` y modificar esa copia. No subir `local.php` a GitHub.
 
+## Carga y edición por teclado (ABM)
+
+**Nueva pieza** y **Editar ficha** abren una ventana modal. El listado queda detrás y conserva sus filtros al cerrar. No se necesitan tablas nuevas para el asistente.
+
+| Tecla | Acción |
+|---|---|
+| Enter | Confirma la pantalla y avanza; en la última, guarda y cierra |
+| Escape | Retrocede una pantalla; en la primera cancela la carga |
+| Tab / Shift+Tab | Recorren los campos y controles visibles |
+| Espacio | Marca/desmarca una categoría o una opción |
+| Shift+Enter | Inserta un salto de línea en un texto largo |
+| Ctrl+Enter | Guarda y cierra desde cualquier pantalla, validando la ficha |
+
+Enter sobre un botón ejecuta ese botón; sobre el selector de archivos abre la elección de fotos. Los botones y el indicador de pasos permiten también usar el mouse. Al cancelar con cambios pendientes se pide confirmar su descarte.
+
+Orden: identificación y categorías → una pantalla por cada material elegido → descripción/datación → gestión interna → presentación → publicación → fotografías. Los campos propios del material salen de las definiciones de categorías existentes. Podés elegir varias categorías sin duplicar la ficha. Cambiar entre pantallas no borra datos; quitar una categoría con valores guardados exige confirmar la eliminación de esos datos.
+
+**Guardar y nueva**, al final, abre otra ficha en blanco con las mismas categorías para facilitar cargas consecutivas. **Guardar y cerrar** vuelve al listado. Los borradores sólo requieren al menos una categoría; si se omite el título se guarda «Sin título». Publicar sigue requiriendo portada.
+
+En fotografías se puede elegir portada, ordenar con las flechas o arrastrando, y editar función/textos. **Quitar foto al guardar** marca la foto para eliminarla en el mismo guardado de la ficha; **Deshacer eliminación** la conserva. Cancelar no elimina ninguna foto. Si un error impide guardar, las eliminaciones se revierten junto con los datos.
+
+**Duplicar ficha guardada** crea una pieza con código propio, como borrador y fuera de venta. Copia datos, campos específicos, notas internas, términos y presentación. La opción **Incluir fotografías** está marcada inicialmente; genera archivos independientes, por lo que borrar una foto del original no afecta la copia. La operación toma la última versión guardada: guardar primero si querés copiar cambios recientes. No copia reservas, ventas, consultas ni el estado publicado.
+
+**Enviar a papelera** borra de forma recuperable. La ficha y sus fotos se conservan hasta restaurarla. No hay borrado físico masivo en esta versión.
+
 ## Primera pieza
 
 En «Nueva pieza», escribir un título, elegir categoría y subir fotos. Guardar como borrador. Los campos de la categoría aparecen al seleccionarla. La primera foto se usa de portada; después se puede elegir otra, editar textos y ordenar arrastrando, con las flechas o por número.
@@ -60,7 +85,7 @@ Las imágenes se dibujan localmente con GD: no se descargan archivos externos. L
 - Se generan miniatura (hasta 420 px), web (hasta 1600 px) y zoom (hasta 2400 px), sin ampliar una imagen pequeña.
 - Las copias son JPEG, sin metadatos EXIF, con fondo blanco para transparencias. Si EXIF está disponible, se corrige la orientación del JPEG.
 - **Los originales no se almacenan:** conservarlos aparte. Respaldar `storage/images` junto con la base de datos.
-- Elegir «Eliminar foto» descarta los cambios no guardados de la ficha; confirmar después de guardar lo que se quiera conservar. Para quitar una portada de una ficha publicada, guardar otra portada o pasarla a borrador primero.
+- Marcar una foto para quitarla aplica la eliminación al guardar toda la ficha. Si quitás todas las fotos de una pieza publicada, elegí borrador o agregá otra portada antes de guardar.
 
 Si falla una carga por tamaño, revisar `C:\xampp\php\php.ini`:
 

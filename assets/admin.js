@@ -1,7 +1,8 @@
 'use strict';
 const form = document.getElementById('piece-form');
-let dirty = false;
+let dirty = Boolean(document.querySelector('.editor-shell .notice.error'));
 let submitting = false;
+window.ProdigoForm = {isDirty: () => dirty, markDirty: () => { dirty = true; }, submitting: () => { submitting = true; }};
 if (form) {
   const updateCategories = () => {
     const ids = [...form.querySelectorAll('[data-category]:checked')].map(el => el.value);
@@ -20,8 +21,9 @@ if (form) {
   form.addEventListener('change', updateCategories);
   form.addEventListener('submit', event => {
     if (event.defaultPrevented) return;
-    submitting = true;
-    document.getElementById('save-state').textContent = 'Guardando…';
+    queueMicrotask(() => {
+      if (!event.defaultPrevented) { submitting = true; document.getElementById('save-state').textContent = 'Guardando…'; }
+    });
   });
   const imageList = form.querySelector('.image-list');
   const renumber = () => {
@@ -59,6 +61,33 @@ if (form) {
     dragged = null;
   });
   imageList.addEventListener('dragend', () => { dragged = null; });
+  const setRemoval = (id, removed) => {
+    const article = [...imageList.children].find(el => el.dataset.imageId === id);
+    if (!article) return;
+    const hidden = [...form.querySelectorAll('input[name="remove_images[]"]')].find(el => el.value === id);
+    if (removed && !hidden) {
+      const input = document.createElement('input'); input.type = 'hidden';
+      input.name = 'remove_images[]'; input.value = id; form.appendChild(input);
+    } else if (!removed && hidden) hidden.remove();
+    article.classList.toggle('pending-removal', removed);
+    const button = article.querySelector('[data-remove-image]');
+    button.textContent = removed ? 'Deshacer eliminación' : 'Quitar foto al guardar';
+    button.setAttribute('aria-pressed', String(removed));
+    const radio = article.querySelector('input[name="cover"]');
+    if (removed && radio.checked) {
+      radio.checked = false;
+      const next = imageList.querySelector('.image-edit:not(.pending-removal) input[name="cover"]');
+      if (next) next.checked = true;
+    }
+  };
+  imageList.addEventListener('click', event => {
+    const button = event.target.closest('[data-remove-image]');
+    if (!button) return;
+    const article = button.closest('.image-edit');
+    setRemoval(button.dataset.removeImage, !article.classList.contains('pending-removal'));
+    dirty = true; document.getElementById('save-state').textContent = 'Tenés cambios sin guardar.';
+  });
+  [...form.querySelectorAll('input[name="remove_images[]"]')].forEach(input => setRemoval(input.value, true));
   let objectUrls = [];
   document.getElementById('photos').addEventListener('change', event => {
     const preview = document.getElementById('upload-preview');
