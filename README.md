@@ -27,4 +27,4 @@ No se incluyen cuentas con contraseña por defecto ni datos personales. En **Eje
 
 Continuar con edición de categorías/campos, relaciones y recorridos; ampliar los recorridos y definir el canal de contacto. Este repositorio almacena código y migraciones: las fichas, imágenes y respaldos privados se guardan fuera de Git.
 
-El inicio usa fondo negro, marca blanca de peso fuerte, acceso a Catálogo, una grilla plana de colores por material y Sorprendeme. El cambio visual está limitado al inicio; catálogo y fichas conservan su presentación.
+El inicio comparte el estilo sobrio del catálogo: fondo claro, marca con serif, navegación por materiales y una pieza al azar.
