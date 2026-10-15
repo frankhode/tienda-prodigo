@@ -125,7 +125,9 @@ def public(path='catalogo.php', **params):
     return visitor.get(base + path, params=params, timeout=30)
 assert public('index.php').url.endswith('catalogo.php')
 home = public()
-assert home.status_code == 200 and 'Objetos con' in home.text
+assert home.status_code == 200 and 'minimal-home' in home.text and 'Sorprendeme' in home.text
+assert home.text.count('class="material-tile ') == 10
+assert 'hero-pieces' not in home.text
 catalog = public(vista='catalogo')
 assert catalog.status_code == 200 and catalog.text.count('class="object-card"') == 18
 assert '[DEMO]' not in catalog.text  # Los títulos se limpian en la vista, la advertencia permanece.

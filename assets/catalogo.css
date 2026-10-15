@@ -41,3 +41,17 @@ body{padding-top:52px}html{scroll-padding-top:64px}
 .shop-header .header-breadcrumbs a{flex-shrink:0;text-decoration:none}.shop-header .header-breadcrumbs [aria-current]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .shop-menu{flex-shrink:0;margin-left:auto}
 @media(max-width:650px){.shop-header{gap:10px}.shop-header .wordmark img{height:40px}.shop-header .header-breadcrumbs{gap:6px;font-size:10px}.shop-menu summary{padding:4px;font-size:12px}}
+
+/* Inicio: marca, superficies de color y navegación directa. */
+.minimal-home{--paper:#080808;--ink:#fff;--line:#303030;--pale:#242424;--muted:#bbb;--accent:#fff;background:#080808;color:#fff;font-family:Arial,Helvetica,sans-serif}
+.minimal-home main{max-width:1440px;padding:0 5% 44px}.minimal-home .shop-header{background:#080808;border-color:#282828}.minimal-home .shop-menu nav{background:#111}.minimal-home .shop-menu .demo-strip{color:#ccc;background:#242424}
+.home-identity{display:flex;align-items:center;gap:clamp(20px,5vw,72px);padding:32px 0 28px}.home-logo{width:clamp(95px,14vw,170px);height:auto;display:block}.home-identity h1{font:900 clamp(64px,12vw,168px)/.9 Arial,Helvetica,sans-serif;letter-spacing:-.075em;margin:0}.home-identity h1>span{color:#ff653b}
+.home-navigation{display:grid;gap:12px}.home-catalog,.home-surprise,.material-tile{display:flex;align-items:center;justify-content:space-between;text-decoration:none;border:0;border-radius:0;font-family:Arial,Helvetica,sans-serif;font-weight:800;line-height:1.05;letter-spacing:-.035em;transition:filter .12s,transform .12s}
+.home-catalog{min-height:100px;background:#fff;color:#080808;padding:22px 28px;font-size:clamp(30px,4vw,52px)}
+.home-materials{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.material-tile{align-items:flex-end;gap:12px;min-height:154px;padding:20px;font-size:clamp(20px,2.1vw,30px);color:#0a0a0a;overflow-wrap:anywhere}.material-tile>span:last-child{font-weight:400;flex-shrink:0;font-size:24px}
+.material-color-0{background:#ff653b}.material-color-1{background:#bb9aff}.material-color-2{background:#f2db3f}.material-color-3{background:#68a4ff}.material-color-4{background:#b2e45c}.material-color-5{background:#ff9ecb}.material-color-6{background:#62d6c5}.material-color-7{background:#ffa64d}.material-color-8{background:#c0c7ff}.material-color-9{background:#e9e5d9}
+.home-surprise{min-height:102px;padding:22px 28px;background:#b2e45c;color:#080808;font-size:clamp(30px,4vw,52px)}.home-surprise>span:last-child{font-size:1.3em;line-height:1}
+.home-navigation a:hover{filter:brightness(1.1)}.home-navigation a:active{transform:translateY(2px)}.minimal-home a:focus-visible,.minimal-home summary:focus-visible{outline:3px solid #fff;outline-offset:4px}.minimal-home .shop-footer{border-color:#303030;color:#aaa;font-family:Arial,Helvetica,sans-serif}.minimal-home .footer-brand{color:#fff;font-family:Arial,Helvetica,sans-serif;font-weight:800}
+@media(max-width:1050px){.home-materials{grid-template-columns:repeat(3,minmax(0,1fr))}.material-tile{min-height:125px}}
+@media(max-width:650px){.minimal-home main{padding:0 4% 24px}.home-identity{padding:28px 0;gap:18px}.home-logo{width:78px}.home-identity h1{font-size:clamp(52px,14vw,88px)}.home-navigation,.home-materials{gap:8px}.home-materials{grid-template-columns:repeat(2,minmax(0,1fr))}.material-tile{padding:16px;min-height:116px;font-size:23px}.home-catalog,.home-surprise{min-height:80px;padding:18px 20px;font-size:34px}}
+@media(prefers-reduced-motion:reduce){.home-navigation a{transition:none}}

@@ -17,7 +17,7 @@ try {
     }
     $demo=(int)query("SELECT COUNT(*) FROM public_pieces WHERE code LIKE 'DEMO-%'")->fetchColumn()>0;
 } catch(Throwable $e) { report_error($e); http_response_code(503); $error=true; }
-shop_header($piece?shop_title($piece):($view==='catalogo'?'Catálogo':'Objetos con otra vida'),$demo,$piece?:null);
+shop_header($piece?shop_title($piece):($view==='catalogo'?'Catálogo':'Objetos con otra vida'),$demo,$piece?:null,!$piece&&$slug===''&&$view!=='catalogo');
 try {
     if($shopPreview&&$piece) { ?><div class="private-preview">Previsualización privada · <?=h(PUBLICATION[$piece['publication_status']])?> · Cambios guardados <a href="<?=h(url('edit',['id'=>$piece['id']]))?>">Volver a editar ↗</a></div><?php }
     if($error): ?><section class="catalog-empty"><h1>Volvemos en un momento.</h1><p>El catálogo no está disponible temporalmente.</p><a href="catalogo.php">Volver a intentar</a></section><?php
