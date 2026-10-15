@@ -1,6 +1,6 @@
 # Panel de administración
 
-La carga y edición actual se realizan en un modal ABM por pasos, con Enter para avanzar, Escape para retroceder y Tab para campos. Fotos al final; pasos de material según categorías. Ver [uso en XAMPP](xampp.md#carga-y-edición-por-teclado-abm).
+La carga y edición actual se realizan en un modal ABM por pasos, con Enter para avanzar, Escape para retroceder y Tab para campos. Fotos al final; pasos de material según categorías. Plantillas, tipografías y encuadre se editan y guardan por separado en **Visualización**. Ver [uso en XAMPP](xampp.md#carga-y-edición-por-teclado-abm).
 
 
 ## Trabajo diario

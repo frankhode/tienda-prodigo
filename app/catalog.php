@@ -14,7 +14,7 @@ function piece_images(int $id): array {
 }
 function piece_version(int $id): string {
     return hash('sha256', json_encode([
-        get_piece($id), piece_images($id), presentation_get($id),
+        get_piece($id), piece_images($id),
         query('SELECT category_id FROM piece_categories WHERE piece_id=? ORDER BY category_id',[$id])->fetchAll(),
         query('SELECT * FROM piece_field_values WHERE piece_id=? ORDER BY category_id,field_key',[$id])->fetchAll(),
     ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
@@ -106,7 +106,6 @@ function save_piece(int $id): int {
         }
         $values[]=[$def['category_id'],$def['field_key'],$v];
     }
-    $presentation=presentation_ready()?presentation_input():null;
     $batch=prepare_uploads(); $deletedFiles=[];
     try {
         db()->beginTransaction();
@@ -177,7 +176,6 @@ function save_piece(int $id): int {
             if (!$cover || !query("SELECT image_id FROM image_variants WHERE image_id=? AND variant='web'",[$cover])->fetch()) throw new InvalidArgumentException('Para publicar, subí al menos una foto y elegí portada.');
             query('UPDATE pieces SET published_at=COALESCE(published_at,CURRENT_TIMESTAMP) WHERE id=?',[$id]);
         }
-        if($presentation!==null) presentation_save($id,$presentation);
         db()->commit();
         foreach($deletedFiles as $key) { $path=image_key($key); if(is_file($path)) @unlink($path); $dir=dirname($path); if(is_dir($dir)&&count(@scandir($dir)?:[])===2) @rmdir($dir); }
         return $id;

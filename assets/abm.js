@@ -43,7 +43,7 @@
     form.appendChild(group);
   });
   categoryContainer.hidden = true;
-  const order = [identity, ...materialSteps, ...['description', 'internal', 'presentation', 'publication', 'photos'].map(key => form.querySelector(`[data-step="${key}"]`)).filter(Boolean)];
+  const order = [identity, ...materialSteps, ...['description', 'internal', 'publication', 'photos'].map(key => form.querySelector(`[data-step="${key}"]`)).filter(Boolean)];
   order.forEach(step => form.appendChild(step));
   const oldSavebar = form.querySelector('.savebar');
   oldSavebar.classList.add('abm-savebar');
@@ -123,7 +123,6 @@
   form.addEventListener('change', () => { rebuild(); selectStep(current, false); });
   form.addEventListener('submit', event => {
     // Instalación de estilos: operación separada, conserva su aviso de guardar antes.
-    if (event.submitter?.name === 'enable_templates') return;
     for (let i = 0; i < steps.length; i++) {
       const previous = current;
       selectStep(i, false);

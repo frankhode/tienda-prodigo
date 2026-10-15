@@ -28,13 +28,16 @@ try {
             flash('Copia creada como borrador, con código propio. Revisala antes de publicar.');
             redirect('edit',['id'=>$id]);
         }
-        if ($page==='edit') {
+        if($page==='appearance') {
             $id=id_param();
             if(isset($_POST['enable_templates'])) {
                 db()->exec(file_get_contents(__DIR__.'/database/004_presentations.sql'));
                 flash('Plantillas habilitadas. Ya podés elegir la presentación de cada pieza.');
-                redirect('edit',['id'=>$id]);
-            }
+            } else { presentation_update($id); flash('Visualización guardada.'); }
+            redirect('appearance',['id'=>$id]);
+        }
+        if ($page==='edit') {
+            $id=id_param();
             if (isset($_POST['delete_image'])) {
                 delete_image($id,(int)$_POST['delete_image']); flash('Foto eliminada.'); redirect('edit',['id'=>$id]);
             }
@@ -66,6 +69,7 @@ try {
     if (!$user && in_array($page,['login','setup'],true)) login_view($setup,$error);
     elseif (!$user) { ?><section class="card"><h1>Conectemos la base de datos</h1><div class="notice error"><?=h($error)?></div><p>Iniciá MySQL en XAMPP, verificá que exista la base prodigo e importá el esquema y las categorías. Si cambiaste los datos de conexión, copiá config/example.php como config/local.php y editá esa copia.</p><a class="button" href="index.php">Volver a comprobar</a></section><?php }
     elseif ($page==='demo') demo_view($error);
+    elseif ($page==='appearance') appearance_view(id_param(),$error);
     elseif ($page==='edit') edit_view(id_param(),$error);
     elseif ($page==='preview') { ?><div class="notice error"><?=h($error)?></div><?php }
     else list_view($error);

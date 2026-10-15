@@ -59,7 +59,7 @@ La V1 no necesita migraciones SQL. Sigue siendo una instalación local: estos ar
 
 ## Plantillas por pieza
 
-Después de actualizar el código, abrir una ficha en el panel y buscar **Plantilla de visualización**. Guardar primero los cambios de la ficha y pulsar **Habilitar plantillas** una sola vez: agrega `piece_presentations` sin modificar las tablas existentes. También es posible importar `database/004_presentations.sql` desde phpMyAdmin. Si todavía no se habilitaron, las fichas funcionan con paneles por defecto.
+Después de actualizar el código, abrir **Visualización** en el menú del panel. Si todavía no están habilitadas, pulsar **Habilitar plantillas** una sola vez: agrega `piece_presentations` sin modificar las tablas existentes. También es posible importar `database/004_presentations.sql` desde phpMyAdmin. Si todavía no se habilitaron, las fichas funcionan con paneles por defecto.
 
 - **Paneles:** información a la izquierda e imagen a la derecha en computadora; imagen arriba en celular.
 - **Wallpaper:** la portada ocupa el fondo y el título y un texto breve flotan encima; la ficha completa y la galería se mantienen debajo. Sin portada, se usa paneles.
@@ -67,6 +67,8 @@ Después de actualizar el código, abrir una ficha en el panel y buscar **Planti
 - En wallpaper, elegir posición izquierda/centro/derecha, velo oscuro/claro, intensidad y punto de encuadre horizontal/vertical. El fondo se recorta para cubrir el área; la imagen completa sigue disponible en el visor.
 - Escribir, si se desea, un texto breve (hasta 600 caracteres) para la portada. El texto descriptivo largo no se superpone al fondo.
 - Guardar y usar **Previsualizar** para ver los ajustes, incluso en borradores. **Probar paneles** / **Probar wallpaper** comparan ambos con los datos guardados sin cambiar la elección. Estas vistas y las imágenes de borradores exigen sesión administrativa; compartir su URL no publica una ficha.
+
+Elegir una pieza guardada y pulsar **Abrir visualización**. También se accede desde el botón **Visualización** de una ficha existente. El modal de carga sólo contiene datos y fotos: guardar la ficha conserva el diseño, y **Guardar visualización** no modifica sus datos. No hace falta ejecutar SQL nuevamente si las plantillas ya estaban habilitadas.
 
 En móvil el fondo tiene un velo más intenso para facilitar la lectura. Los ajustes son independientes por pieza y no cambian el diseño de las tarjetas del catálogo.
 

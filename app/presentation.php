@@ -45,8 +45,39 @@ function presentation_classes(array $s): string {
  return 'template-'.$s['template'].' title-font-'.$s['title_font'].' body-font-'.$s['body_font'].' title-size-'.$s['title_size'].' body-size-'.$s['body_size'].' title-style-'.$s['title_style'].' text-'.$s['text_position'].' tone-'.$s['tone'].' veil-'.(int)$s['veil'].' focus-x-'.(int)$s['focal_x'].' focus-y-'.(int)$s['focal_y'];
 }
 function presentation_editor(int $id): void {
- ?><section class="card"><h2>Plantilla de visualización</h2><?php if(!presentation_ready()): ?><p>Habilitá las plantillas para elegir la presentación de cada pieza. Se agrega una tabla; tus fichas e imágenes se conservan.</p><button type="submit" name="enable_templates" value="1" formnovalidate>Habilitar plantillas</button><p class="muted">Guardá primero cualquier cambio de esta ficha.</p><?php else: $settings=presentation_get($id); ?><p class="muted">La misma ficha, dos formas de presentarla. Los cambios se aplican al guardar.</p><?php if($id): $piece=get_piece($id); ?><p><a class="button" target="_blank" rel="noopener" href="<?=h('catalogo.php?'.http_build_query(['pieza'=>$piece['slug'],'preview'=>1,'plantilla'=>'panels']))?>">Probar paneles ↗</a> <a class="button" target="_blank" rel="noopener" href="<?=h('catalogo.php?'.http_build_query(['pieza'=>$piece['slug'],'preview'=>1,'plantilla'=>'wallpaper']))?>">Probar wallpaper ↗</a></p><p class="muted">Estas pruebas usan los datos y estilos guardados y no cambian la plantilla elegida.</p><?php endif ?><div class="field-grid"><?php
+ ?><section class="card"><h2>Plantilla de visualización</h2><?php if(!presentation_ready()): ?><p>Habilitá las plantillas para elegir la presentación de cada pieza. Se agrega una tabla; tus fichas e imágenes se conservan.</p><button type="submit" name="enable_templates" value="1" formnovalidate>Habilitar plantillas</button><p class="muted">La configuración visual se guarda por separado de los datos de la ficha.</p><?php else: $settings=presentation_get($id); ?><p class="muted">La misma ficha, dos formas de presentarla. Los cambios se aplican al guardar.</p><?php if($id): $piece=get_piece($id); ?><p><a class="button" target="_blank" rel="noopener" href="<?=h('catalogo.php?'.http_build_query(['pieza'=>$piece['slug'],'preview'=>1,'plantilla'=>'panels']))?>">Probar paneles ↗</a> <a class="button" target="_blank" rel="noopener" href="<?=h('catalogo.php?'.http_build_query(['pieza'=>$piece['slug'],'preview'=>1,'plantilla'=>'wallpaper']))?>">Probar wallpaper ↗</a></p><p class="muted">Estas pruebas usan los datos y estilos guardados y no cambian la plantilla elegida.</p><?php endif ?><div class="field-grid"><?php
  $labels=['template'=>'Plantilla','title_font'=>'Tipografía del título','body_font'=>'Tipografía del texto','title_size'=>'Tamaño del título','body_size'=>'Tamaño del texto','title_style'=>'Estilo del título','text_position'=>'Posición del texto en wallpaper','tone'=>'Contraste en wallpaper'];
  foreach(PRESENTATION_OPTIONS as $key=>$options) select_view('display_'.$key,$labels[$key],$options,['display_'.$key=>$settings[$key]],presentation_defaults()[$key]);
  ?></div><div class="field-grid"><label>Intensidad del velo<select name="display_veil"><?php foreach([20,40,60,80] as $n): ?><option value="<?=$n?>" <?=(int)($_POST['display_veil']??$settings['veil'])===$n?'selected':''?>><?=$n?> %</option><?php endforeach ?></select><small>Más intensidad facilita la lectura sobre la imagen.</small></label><label>Encuadre horizontal del fondo<select name="display_focal_x"><?php for($n=0;$n<=100;$n+=10): ?><option value="<?=$n?>" <?=(int)($_POST['display_focal_x']??$settings['focal_x'])===$n?'selected':''?>><?=$n?> %<?=$n===0?' · izquierda':($n===100?' · derecha':($n===50?' · centro':''))?></option><?php endfor ?></select></label><label>Encuadre vertical del fondo<select name="display_focal_y"><?php for($n=0;$n<=100;$n+=10): ?><option value="<?=$n?>" <?=(int)($_POST['display_focal_y']??$settings['focal_y'])===$n?'selected':''?>><?=$n?> %<?=$n===0?' · arriba':($n===100?' · abajo':($n===50?' · centro':''))?></option><?php endfor ?></select></label></div><label>Texto breve sobre la imagen<textarea name="display_lead" rows="3" maxlength="600"><?=h($_POST['display_lead']??$settings['lead'])?></textarea><small>Opcional. La descripción completa sigue en la ficha de detalle.</small></label><p class="muted">Wallpaper utiliza la portada. En celular, el texto se apila sobre un velo más intenso y los detalles quedan debajo. Las tipografías disponibles son familias del sistema, sin descargas externas.</p><?php endif ?></section><?php
+}
+
+function presentation_version(int $id): string {
+    return hash('sha256',json_encode(presentation_get($id),JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR));
+}
+function presentation_update(int $id): void {
+    if(!$id) throw new InvalidArgumentException('Elegí una pieza guardada.');
+    if(!presentation_ready()) throw new InvalidArgumentException('Primero habilitá las plantillas.');
+    $settings=presentation_input();
+    db()->beginTransaction();
+    try {
+        query('SELECT id FROM pieces WHERE id=? FOR UPDATE',[$id]);
+        $piece=get_piece($id);
+        if($piece['deleted_at']) throw new InvalidArgumentException('Restaurá la pieza antes de editar su visualización.');
+        if(presentation_version($id)!==text_input('version',64)) throw new InvalidArgumentException('La visualización cambió en otra pestaña. Recargá antes de guardar.');
+        presentation_save($id,$settings);
+        db()->commit();
+    } catch(Throwable $e) { if(db()->inTransaction()) db()->rollBack(); throw $e; }
+}
+function appearance_view(int $id,string $error): void {
+    ?><div class="page-heading"><div><p class="eyebrow">Presentación de las piezas</p><h1>Visualización</h1><p class="muted">Plantilla, tipografías y encuadre. Se guardan de manera independiente de la ficha.</p></div><a class="button" href="<?=h(url('list'))?>">Volver a piezas</a></div><?php
+    if($error): ?><div class="notice error" role="alert"><?=h($error)?></div><?php endif;
+    $rows=query('SELECT id,code,title FROM pieces WHERE deleted_at IS NULL ORDER BY title,id')->fetchAll();
+    ?><form class="filters card" method="get"><input type="hidden" name="page" value="appearance"><label>Elegir pieza<select name="id"><option value="">Seleccioná una pieza</option><?php foreach($rows as $p): ?><option value="<?=$p['id']?>" <?=(int)$p['id']===$id?'selected':''?>><?=h($p['title'].' · '.$p['code'])?></option><?php endforeach ?></select></label><button type="submit">Abrir visualización</button></form><?php
+    if(!$id) {
+        if(!presentation_ready()): ?><form method="post" action="<?=h(url('appearance'))?>"><?=csrf()?><?php presentation_editor(0); ?></form><?php endif;
+        return;
+    }
+    $piece=get_piece($id);
+    if($piece['deleted_at']) throw new InvalidArgumentException('Restaurá primero la pieza.');
+    ?><div class="page-heading"><h2><?=h($piece['title'])?></h2><a class="button" href="<?=h(url('preview',['id'=>$id]))?>" target="_blank" rel="noopener">Previsualizar ↗</a></div><form class="appearance-form" method="post" action="<?=h(url('appearance',['id'=>$id]))?>"><?=csrf()?><input type="hidden" name="version" value="<?=h($_POST['version']??presentation_version($id))?>"><?php presentation_editor($id); if(presentation_ready()): ?><div class="savebar"><span>Se aplicará sólo la presentación visual.</span><button class="primary" type="submit">Guardar visualización</button></div><?php endif ?></form><?php
 }
