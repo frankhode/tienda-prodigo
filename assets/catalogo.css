@@ -34,3 +34,10 @@ body{padding-top:52px}html{scroll-padding-top:64px}
 .private-preview{margin:8px 0 0;padding:6px 10px;font-size:11px;gap:8px;flex-direction:row;align-items:center;flex-wrap:wrap}
 .breadcrumbs{padding:10px 0;font-size:11px}
 @media(max-width:650px){.shop-header{height:48px;padding:0 4%}.shop-header .wordmark{font-size:27px}body{padding-top:48px}.private-preview{font-size:10px;padding:5px 8px}.breadcrumbs{padding:8px 0;font-size:10px}}
+
+.shop-header .wordmark{display:flex;align-items:center;flex:0 0 auto;height:100%}
+.shop-header .wordmark img{display:block;width:auto;height:44px;object-fit:contain}
+.shop-header .header-breadcrumbs{display:flex;align-items:center;gap:10px;min-width:0;margin-right:auto;font-size:11px}
+.shop-header .header-breadcrumbs a{flex-shrink:0;text-decoration:none}.shop-header .header-breadcrumbs [aria-current]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shop-menu{flex-shrink:0;margin-left:auto}
+@media(max-width:650px){.shop-header{gap:10px}.shop-header .wordmark img{height:40px}.shop-header .header-breadcrumbs{gap:6px;font-size:10px}.shop-menu summary{padding:4px;font-size:12px}}
