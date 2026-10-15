@@ -55,3 +55,13 @@ body{padding-top:52px}html{scroll-padding-top:64px}
 @media(max-width:1050px){.home-materials{grid-template-columns:repeat(3,minmax(0,1fr))}.material-tile{min-height:125px}}
 @media(max-width:650px){.minimal-home main{padding:0 4% 24px}.home-identity{padding:28px 0;gap:18px}.home-logo{width:78px}.home-identity h1{font-size:clamp(52px,14vw,88px)}.home-navigation,.home-materials{gap:8px}.home-materials{grid-template-columns:repeat(2,minmax(0,1fr))}.material-tile{padding:16px;min-height:116px;font-size:23px}.home-catalog,.home-surprise{min-height:80px;padding:18px 20px;font-size:34px}}
 @media(prefers-reduced-motion:reduce){.home-navigation a{transition:none}}
+
+/* Ajuste de escala: palabras completas y más aire en los accesos. */
+.home-identity{gap:32px;padding:30px 0}.home-logo{width:clamp(80px,10vw,120px)}.home-identity h1{font-size:clamp(56px,9vw,116px);letter-spacing:-.06em;line-height:1}
+.home-catalog,.home-surprise{min-height:84px;padding:20px 24px;font-size:clamp(28px,3.1vw,40px);font-weight:750;letter-spacing:-.025em}
+.home-materials{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.material-tile{position:relative;min-height:136px;padding:22px 20px;font-size:24px;font-weight:700;line-height:1.16;letter-spacing:-.025em;overflow-wrap:normal;word-break:normal;hyphens:none}
+.material-tile>span:first-child{display:block;width:100%;min-width:0;overflow-wrap:normal;word-break:normal}
+.material-tile>span:last-child{position:absolute;top:14px;right:16px;font-size:18px;line-height:1}
+@media(max-width:650px){.home-identity{gap:18px;padding:26px 0}.home-logo{width:68px}.home-identity h1{font-size:clamp(45px,12vw,76px)}.home-materials{grid-template-columns:repeat(2,minmax(0,1fr))}.material-tile{min-height:120px;padding:34px 14px 18px;font-size:clamp(17px,4vw,23px)}.home-catalog,.home-surprise{min-height:74px;padding:18px;font-size:30px}}
+@media(max-width:340px){.home-materials{grid-template-columns:1fr}.material-tile{min-height:95px;font-size:22px}.home-identity{gap:12px}.home-logo{width:52px}.home-identity h1{font-size:42px}}
