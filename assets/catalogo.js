@@ -43,3 +43,16 @@ if (thumbs.length && dialog) {
     document.getElementById('next-photo').disabled = true;
   }
 }
+
+const shopMenu = document.querySelector('.shop-menu');
+if (shopMenu) {
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && shopMenu.open) {
+      shopMenu.open = false;
+      shopMenu.querySelector('summary').focus();
+    }
+  });
+  document.addEventListener('click', event => {
+    if (!shopMenu.contains(event.target)) shopMenu.open = false;
+  });
+}

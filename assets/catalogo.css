@@ -23,3 +23,14 @@
 .focus-y-80{--focus-y:80%;}
 .focus-y-90{--focus-y:90%;}
 .focus-y-100{--focus-y:100%;}
+
+/* Cabecera compacta y fija en todas las vistas del catálogo. */
+body{padding-top:52px}html{scroll-padding-top:64px}
+.shop-header{position:fixed;inset:0 0 auto;z-index:30;max-width:none;height:52px;margin:0;padding:0 5%;gap:16px;background:var(--paper);border-bottom:1px solid var(--line)}
+.shop-header .wordmark{font-size:29px;letter-spacing:-1.3px;line-height:1}
+.shop-menu{position:relative}.shop-menu summary{display:flex;align-items:center;gap:9px;min-height:40px;padding:4px 8px;cursor:pointer;list-style:none;font-size:13px}.shop-menu summary::-webkit-details-marker{display:none}
+.shop-header .shop-menu nav{position:absolute;right:0;top:calc(100% + 6px);width:min(290px,90vw);display:flex;flex-direction:column;align-items:stretch;gap:0;padding:8px;background:var(--paper);border:1px solid var(--line);box-shadow:0 10px 30px #29342f20}
+.shop-menu:not([open]) nav{display:none}.shop-header .shop-menu nav a{padding:12px 14px;font-size:14px;text-decoration:none}.shop-menu nav a:hover{background:var(--pale)}.shop-menu .demo-strip{margin:6px 0 0;padding:10px;font-size:10px;text-align:left}
+.private-preview{margin:8px 0 0;padding:6px 10px;font-size:11px;gap:8px;flex-direction:row;align-items:center;flex-wrap:wrap}
+.breadcrumbs{padding:10px 0;font-size:11px}
+@media(max-width:650px){.shop-header{height:48px;padding:0 4%}.shop-header .wordmark{font-size:27px}body{padding-top:48px}.private-preview{font-size:10px;padding:5px 8px}.breadcrumbs{padding:8px 0;font-size:10px}}
