@@ -57,10 +57,10 @@ try {
     if ($page==='media') {
         $variant=is_string($_GET['variant']??null)?$_GET['variant']:'thumbnail';
         if (!in_array($variant,['thumbnail','web','zoom'],true)) throw new InvalidArgumentException('Versión de imagen inválida.');
-        $image=query('SELECT v.storage_key FROM image_variants v JOIN images i ON i.id=v.image_id JOIN pieces p ON p.id=i.piece_id WHERE v.image_id=? AND v.variant=?',[id_param(),$variant])->fetch();
+        $image=query('SELECT v.storage_key,v.mime_type FROM image_variants v JOIN images i ON i.id=v.image_id JOIN pieces p ON p.id=i.piece_id WHERE v.image_id=? AND v.variant=?',[id_param(),$variant])->fetch();
         if (!$image) { http_response_code(404); exit; }
         $file=image_key($image['storage_key']); if (!is_file($file)) { http_response_code(404); exit; }
-        header('Content-Type: image/jpeg'); header('Content-Length: '.filesize($file)); session_write_close(); readfile($file); exit;
+        header('Content-Type: '.($image['mime_type']==='image/webp'?'image/webp':'image/jpeg')); header('X-Content-Type-Options: nosniff'); header('Content-Length: '.filesize($file)); session_write_close(); readfile($file); exit;
     }
 } catch (Throwable $e) { $error=report_error($e); }
 if($user&&$page==='preview'&&$error==='') { try { $p=get_piece(id_param()); header('Location: catalogo.php?'.http_build_query(['pieza'=>$p['slug'],'preview'=>1])); exit; } catch(Throwable $e) { $error=report_error($e); } }

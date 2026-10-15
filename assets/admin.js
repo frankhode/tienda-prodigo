@@ -94,7 +94,7 @@ if (form) {
     objectUrls.forEach(URL.revokeObjectURL); objectUrls = [];
     preview.replaceChildren();
     for (const file of event.target.files) {
-      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) continue;
+      if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/bmp', 'image/avif'].includes(file.type)) continue;
       const img = document.createElement('img');
       const localUrl = URL.createObjectURL(file); objectUrls.push(localUrl);
       img.src = localUrl; img.alt = file.name; preview.appendChild(img);

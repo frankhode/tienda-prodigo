@@ -20,7 +20,7 @@ function piece_version(int $id): string {
     ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
 }
 function image_key(string $key): string {
-    if (!preg_match('~^[a-f0-9]{32}/(thumbnail|web|zoom)\.jpg$~D', $key)) throw new RuntimeException('Clave de imagen inválida.');
+    if (!preg_match('~^[a-f0-9]{32}/(thumbnail|web|zoom)\.(jpg|webp)$~D', $key)) throw new RuntimeException('Clave de imagen inválida.');
     return STORAGE . '/images/' . $key;
 }
 function remove_generated(array $batch): void {
@@ -38,12 +38,19 @@ function prepare_uploads(): array {
         foreach ($files['error'] as $i => $error) {
             if ($error === UPLOAD_ERR_NO_FILE) continue;
             if ($error !== UPLOAD_ERR_OK) throw new InvalidArgumentException('Una foto no pudo subirse. Revisá upload_max_filesize y post_max_size en PHP.');
+            if (!function_exists('imagewebp') || !(imagetypes() & IMG_WEBP)) throw new InvalidArgumentException('Tu extensión GD no tiene soporte WebP. Habilitá GD con WebP en PHP.');
             if (!function_exists('imagecreatefromstring')) throw new InvalidArgumentException('Activá la extensión GD en PHP para procesar fotos.');
             $tmp = $files['tmp_name'][$i];
-            if (!is_uploaded_file($tmp) || filesize($tmp) > 15 * 1024 * 1024) throw new InvalidArgumentException('Cada foto puede pesar hasta 15 MB.');
+            if (!is_uploaded_file($tmp) || filesize($tmp) > 40 * 1024 * 1024) throw new InvalidArgumentException('Cada foto puede pesar hasta 40 MB.');
             $info = @getimagesize($tmp);
-            if (!$info || !in_array($info[2], [IMAGETYPE_JPEG,IMAGETYPE_PNG,IMAGETYPE_WEBP], true)) throw new InvalidArgumentException('Usá fotos JPG, PNG o WebP.');
-            if ($info[0] * $info[1] > 12000000) throw new InvalidArgumentException('La foto supera 12 megapíxeles. Prepará una copia de menor tamaño para la web.');
+            if (!$info || !in_array($info[2], [IMAGETYPE_JPEG,IMAGETYPE_PNG,IMAGETYPE_WEBP,IMAGETYPE_GIF,IMAGETYPE_BMP,IMAGETYPE_AVIF], true)) throw new InvalidArgumentException('Usá JPG, PNG, WebP, GIF, BMP o AVIF (según soporte GD). TIFF, HEIC y RAW requieren conversión previa.');
+            if ($info[0] * $info[1] > 50000000) throw new InvalidArgumentException('La foto supera el límite de 50 megapíxeles.');
+            $memory=trim((string)ini_get('memory_limit'));
+            $budget=(int)$memory;
+            if (str_ends_with(strtolower($memory),'g')) $budget*=1024*1024*1024;
+            elseif (str_ends_with(strtolower($memory),'m')) $budget*=1024*1024;
+            elseif (str_ends_with(strtolower($memory),'k')) $budget*=1024;
+            if ($budget>0 && memory_get_usage(true)+$info[0]*$info[1]*8+filesize($tmp)*2+48*1024*1024>$budget) throw new InvalidArgumentException('Esta foto necesita más memoria para convertirla. Configurá memory_limit=512M en php.ini y reiniciá Apache.');
             $source = @imagecreatefromstring(file_get_contents($tmp));
             if (!$source) throw new InvalidArgumentException('No se pudo leer una imagen.');
             try {
@@ -62,8 +69,8 @@ function prepare_uploads(): array {
                     $w=max(1,(int)round(imagesx($source)*$scale)); $hh=max(1,(int)round(imagesy($source)*$scale));
                     $canvas=imagecreatetruecolor($w,$hh); imagefill($canvas,0,0,imagecolorallocate($canvas,255,255,255));
                     imagecopyresampled($canvas,$source,0,0,0,0,$w,$hh,imagesx($source),imagesy($source));
-                    $key=$token . '/' . $variant . '.jpg'; $path=image_key($key);
-                    try { if (!imagejpeg($canvas,$path,$variant==='thumbnail'?82:90)) throw new RuntimeException('Falló la escritura de imagen.'); }
+                    $key=$token . '/' . $variant . '.webp'; $path=image_key($key);
+                    try { if (!imagewebp($canvas,$path,$variant==='thumbnail'?80:88)) throw new RuntimeException('Falló la escritura de imagen.'); }
                     finally { imagedestroy($canvas); }
                     $batch[$index]['variants'][$variant]=['key'=>$key,'width'=>$w,'height'=>$hh,'bytes'=>filesize($path)];
                 }
@@ -165,7 +172,7 @@ function save_piece(int $id): int {
         foreach ($batch as $item) {
             query('INSERT INTO images (piece_id,position,alt_text) VALUES (?,?,?)',[$id,$next++,$title]);
             $imageId=(int)db()->lastInsertId(); $firstNew??=$imageId; $validImages[]=$imageId;
-            foreach ($item['variants'] as $variant=>$v) query('INSERT INTO image_variants (image_id,variant,storage_key,mime_type,width,height,byte_size) VALUES (?,?,?,?,?,?,?)',[$imageId,$variant,$v['key'],'image/jpeg',$v['width'],$v['height'],$v['bytes']]);
+            foreach ($item['variants'] as $variant=>$v) query('INSERT INTO image_variants (image_id,variant,storage_key,mime_type,width,height,byte_size) VALUES (?,?,?,?,?,?,?)',[$imageId,$variant,$v['key'],'image/webp',$v['width'],$v['height'],$v['bytes']]);
         }
         $cover=(int)($_POST['cover']??0);
         if(in_array($cover,$removedImages,true)) $cover=0;
@@ -238,7 +245,7 @@ function duplicate_piece(int $sourceId,bool $withImages): int {
             $newImage=(int)db()->lastInsertId();
             foreach(query('SELECT * FROM image_variants WHERE image_id=?',[$image['id']])->fetchAll() as $variant) {
                 if($variant['storage_backend']!=='local') throw new InvalidArgumentException('Esta imagen necesita copia desde su almacenamiento externo.');
-                $from=image_key($variant['storage_key']); $key=$token.'/'.$variant['variant'].'.jpg';
+                $from=image_key($variant['storage_key']); $key=$token.'/'.$variant['variant'].'.'.pathinfo($variant['storage_key'],PATHINFO_EXTENSION);
                 $copies[$pos]['variants'][$variant['variant']]=['key'=>$key];
                 if(!is_file($from)||!copy($from,image_key($key))) throw new RuntimeException('No se pudo copiar una foto.');
                 query('INSERT INTO image_variants (image_id,variant,storage_key,mime_type,width,height,byte_size) VALUES (?,?,?,?,?,?,?)',[$newImage,$variant['variant'],$key,$variant['mime_type'],$variant['width'],$variant['height'],$variant['byte_size']]);

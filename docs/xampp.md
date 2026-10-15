@@ -82,20 +82,21 @@ Las imágenes se dibujan localmente con GD: no se descargan archivos externos. L
 
 ## Fotografías
 
-- JPG, PNG y WebP; no TIFF ni SVG.
-- Hasta 12 archivos por carga, 15 MB y 12 megapíxeles por foto.
+- JPG, PNG, WebP, GIF y BMP; AVIF si GD lo admite. GIF animado se convierte como imagen fija. TIFF, HEIC, RAW y SVG no se admiten con GD.
+- Para fotos grandes: `memory_limit=512M`, `upload_max_filesize=40M` y `post_max_size=128M` en php.ini; reiniciar Apache. La suma de archivos de una carga debe entrar en post_max_size.
+- Hasta 12 archivos por carga, 40 MB y 50 megapíxeles (según memoria PHP) por foto.
 - Se generan miniatura (hasta 420 px), web (hasta 1600 px) y zoom (hasta 2400 px), sin ampliar una imagen pequeña.
-- Las copias son JPEG, sin metadatos EXIF, con fondo blanco para transparencias. Si EXIF está disponible, se corrige la orientación del JPEG.
+- Las nuevas copias son WebP (calidad 80 en miniaturas, 88 en web/zoom); las fotos JPEG existentes siguen funcionando, sin metadatos EXIF, con fondo blanco para transparencias. Si EXIF está disponible, se corrige la orientación del JPEG.
 - **Los originales no se almacenan:** conservarlos aparte. Respaldar `storage/images` junto con la base de datos.
 - Marcar una foto para quitarla aplica la eliminación al guardar toda la ficha. Si quitás todas las fotos de una pieza publicada, elegí borrador o agregá otra portada antes de guardar.
 
 Si falla una carga por tamaño, revisar `C:\xampp\php\php.ini`:
 
 ```ini
-upload_max_filesize=15M
+upload_max_filesize=40M
 post_max_size=200M
 max_file_uploads=20
-memory_limit=256M
+memory_limit=512M
 ```
 
 Activar extensiones `pdo_mysql`, `mbstring`, `fileinfo` y `gd`; EXIF es opcional. Reiniciar Apache después de modificar PHP. El límite de PHP puede ser menor que el del panel; subir pocas fotos por vez es una alternativa.

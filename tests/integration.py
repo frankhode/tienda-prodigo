@@ -74,7 +74,7 @@ image_id = int(re.search(r'name="cover" value="(\d+)"', r.text).group(1))
 version = token(r.text, 'version')
 for variant in ('thumbnail', 'web', 'zoom'):
     media = get('media', id=image_id, variant=variant)
-    assert media.headers['Content-Type'] == 'image/jpeg' and media.content[:2] == b'\xff\xd8'
+    assert media.headers['Content-Type'] == 'image/webp' and media.content[:4] == b'RIFF' and media.content[8:12] == b'WEBP'
 anon = requests.get(base + 'index.php', params={'page': 'media', 'id': image_id}, timeout=30)
 assert 'Ingresá a Pródigo' in anon.text and 'image/jpeg' not in anon.headers.get('Content-Type', '')
 
@@ -90,7 +90,7 @@ csrf = token(get('edit', id=piece_id).text)
 r = post('trash&id=' + str(piece_id), {'csrf': csrf})
 assert 'Pieza enviada a papelera' in r.text
 assert 'PR-' in get('list', trash=1).text
-assert get('media', id=image_id).headers['Content-Type'] == 'image/jpeg'
+assert get('media', id=image_id).headers['Content-Type'] == 'image/webp'
 r = post('restore&id=' + str(piece_id), {'csrf': csrf})
 assert 'Pieza restaurada' in r.text
 assert 'SECRETO-UBICACION' in get('edit', id=piece_id).text
@@ -99,7 +99,7 @@ assert 'SECRETO-UBICACION' in get('edit', id=piece_id).text
 new = get('edit')
 r = post('edit', {**common, 'csrf': token(new.text), 'title': 'TEST Archivo inválido'},
          files={'photos[]': ('fake.jpg', io.BytesIO(b'<?php echo 1;'), 'image/jpeg')})
-assert 'Usá fotos JPG' in r.text
+assert 'Usá JPG' in r.text
 assert 'TEST Archivo inválido' not in get().text
 
 # Los ejemplos se cargan una sola vez, generan fotos y no afectan las piezas propias.
@@ -255,7 +255,7 @@ source_editor = get('edit',id=piece_id)
 r = post('edit&id='+str(piece_id), {**common,'csrf':token(source_editor.text),
          'version':token(source_editor.text,'version'),'remove_images[]':str(image_id)})
 assert 'Ficha guardada' in r.text
-assert get('media',id=copy_image_id).headers['Content-Type']=='image/jpeg'
+assert get('media',id=copy_image_id).headers['Content-Type']=='image/webp'
 assert s.get(base+'index.php',params={'page':'media','id':image_id},timeout=30).status_code==404
 r = post('duplicate&id='+str(copy_id), {'csrf':token(get('edit',id=copy_id).text)})
 assert 'Copia creada como borrador' in r.text
@@ -277,7 +277,7 @@ r = post('edit&id='+str(copy_id), {**common,'csrf':token(copy_editor.text),
          'version':token(copy_editor.text,'version'),'publication_status':'published',
          'remove_images[]':str(copy_image_id)})
 assert 'Para publicar' in r.text
-assert get('media',id=copy_image_id).headers['Content-Type']=='image/jpeg'
+assert get('media',id=copy_image_id).headers['Content-Type']=='image/webp'
 # Ficheros para la prueba DOM del asistente, sobre HTML real generado por PHP.
 import os
 if os.environ.get('PRODIGO_DOM_FIXTURE_DIR'):
