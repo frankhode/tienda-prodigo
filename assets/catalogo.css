@@ -73,3 +73,12 @@ body.minimal-home{padding-top:0}
 .material-tile{align-items:center;padding:24px 18px}
 .home-catalog>span:last-child,.home-surprise>span:last-child,.material-tile>span:last-child{display:none}
 @media(max-width:650px){.minimal-home .home-identity{padding-top:30px;padding-bottom:26px}.material-tile{padding:20px 14px}}
+
+/* Portada más contenida, con una pieza elegida al azar. */
+.minimal-home main{max-width:1180px;padding-bottom:30px}.minimal-home .home-identity{padding:28px 0 24px;gap:20px}.home-logo{width:76px}.home-identity h1{font-size:72px;letter-spacing:-.055em}
+.home-layout{display:grid;gap:24px}.home-layout.has-feature{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:stretch}.home-navigation{gap:8px;align-content:start}.home-materials{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.home-catalog,.home-surprise{min-height:58px;padding:14px 18px;font-size:25px;font-weight:700}.material-tile{min-height:80px;padding:14px 10px;font-size:18px;line-height:1.2;letter-spacing:-.02em}
+.home-feature{display:flex;flex-direction:column;min-width:0;text-decoration:none;border:1px solid #292929}.home-feature-image{flex:1;min-height:280px;background:#141414;display:grid;place-items:center;padding:16px}.home-feature-image img{display:block;width:100%;height:100%;max-height:420px;object-fit:contain}.home-feature-caption{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 16px;font-size:15px;font-weight:600;line-height:1.4}.home-feature-caption>span:first-child{overflow-wrap:anywhere}.home-feature:hover{border-color:#888}
+@media(max-width:900px){.home-layout.has-feature{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px}.home-materials{grid-template-columns:repeat(2,minmax(0,1fr))}.material-tile{font-size:17px;min-height:70px}.home-feature-image img{max-height:470px}}
+@media(max-width:600px){.minimal-home .home-identity{padding:24px 0 20px;gap:16px}.home-logo{width:60px}.home-identity h1{font-size:54px}.home-layout.has-feature{grid-template-columns:1fr;gap:18px}.home-catalog,.home-surprise{font-size:23px;min-height:52px}.material-tile{font-size:17px;min-height:66px;padding:12px}.home-feature-image{min-height:0;height:260px;flex:auto}.home-feature-image img{max-height:228px}.home-feature-caption{font-size:14px}}
+@media(max-width:340px){.home-materials{grid-template-columns:1fr}.home-identity h1{font-size:46px}}
